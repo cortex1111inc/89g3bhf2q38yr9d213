@@ -88,7 +88,7 @@ export default function ComingSoonPage() {
 
         /* TITLE */
         .wordmark {
-          font-size: clamp(40px, 14vw, 110px);
+          font-size: clamp(30px, 10vw, 110px);
           font-weight: 800;
           letter-spacing: -0.04em;
           line-height: 0.95;
@@ -175,7 +175,7 @@ export default function ComingSoonPage() {
             marginBottom: "1.5rem",
           }}
         >
-          <div className="badge-dot" />
+          <div className="badge-dot se" />
         Finding our pace
         </div>
 
