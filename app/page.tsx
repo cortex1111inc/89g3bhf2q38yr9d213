@@ -175,7 +175,7 @@ export default function ComingSoonPage() {
             marginBottom: "1.5rem",
           }}
         >
-          <div className="badge-dot se" />
+          <div className="badge-dot" />
         Finding our pace
         </div>
 
