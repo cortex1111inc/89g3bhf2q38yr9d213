@@ -175,13 +175,13 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="font-sans bg-white text-brand-black">
-        <Header />
-        <LayoutWrapper>
-          <main className="flex-1">{children}</main>
-        </LayoutWrapper>
-        <Footer />
-        <ChatBot />
+      <body className="">
+        {/* <Header /> */}
+        {/* <LayoutWrapper> */}
+          <main className="">{children}</main>
+        {/* </LayoutWrapper> */}
+        {/* <Footer />
+        <ChatBot /> */}
         <Suspense fallback={null}>
           <GoogleAnalytics />
         </Suspense>
