@@ -9,7 +9,7 @@ const CC_RECIPIENTS = ["hello@vanspire.in", "adithyan.n.dileep@gmail.com"];
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, email, company, message } = body;
+    const { name, email, company, message, website, extraData } = body;
 
     // Basic server-side validation
     if (!name || !email || !company || !message) {
@@ -31,11 +31,32 @@ export async function POST(req: NextRequest) {
       timeZone: "Asia/Kolkata",
     });
 
+    // Capture metadata from request
+    const forwarded = req.headers.get("x-forwarded-for");
+    const ipAddress =
+      forwarded?.split(",")[0]?.trim() ||
+      req.headers.get("x-real-ip") ||
+      "Unknown";
+    const userAgent = req.headers.get("user-agent") || "Unknown";
+    const referrer = req.headers.get("referer") || "Direct/None";
+    const origin = req.headers.get("origin") || "Unknown";
+    const secChUa = req.headers.get("sec-ch-ua") || "Unknown";
+    const secChUaPlatform = req.headers.get("sec-ch-ua-platform") || "Unknown";
+    const secChUaMobile = req.headers.get("sec-ch-ua-mobile") || "Unknown";
+    const acceptLanguage = req.headers.get("accept-language") || "Unknown";
+
+    // Security info
+    const isSourcedFromBot = !!website;
+    const botScore = extraData?.botScore ?? 0;
+    const timeOnPageText = extraData?.interaction?.timeOnPage 
+      ? `${(extraData.interaction.timeOnPage / 1000).toFixed(1)}s` 
+      : "Unknown";
+
     // Forward via Web3Forms (free - no SMTP required)
     // Docs: https://web3forms.com
     const formPayload = {
       access_key: process.env.WEB3FORMS_KEY,
-      subject: `New Enquiry from ${name} - ${company}`,
+      subject: `New Enquiry from ${name} - ${company}${isSourcedFromBot || botScore >= 2 ? ' [POTENTIAL SPAM]' : ''}`,
       from_name: "Vanspire Contact Form",
       replyto: "vanspire.innovations@gmail.com",
       cc: CC_RECIPIENTS.join(","),
@@ -46,6 +67,23 @@ export async function POST(req: NextRequest) {
       Message: message,
       "Submitted At": `${timestamp} IST`,
       Source: "vanspire.in/contact",
+      "--- Frontend Security Analysis ---": "-----------------------",
+      "Bot Score": String(botScore),
+      "Time on Page": timeOnPageText,
+      "Mouse Moved": extraData?.interaction?.mouseMoved ? "Yes" : "No",
+      "Key Pressed": extraData?.interaction?.keyPressed ? "Yes" : "No",
+      "Clicks": String(extraData?.interaction?.clicks ?? 0),
+      "Honeypot Triggered": isSourcedFromBot ? "Yes" : "No",
+      "Client Environment": `${extraData?.screen?.width || '?'}x${extraData?.screen?.height || '?'} | TZ: ${extraData?.timezone || '?'} | Cores: ${extraData?.environment?.hardwareConcurrency || '?'} | Mem: ${extraData?.environment?.deviceMemory || '?'}`,
+      "--- Server-side Meta Information ---": "-----------------------",
+      "IP Address": ipAddress,
+      "User-Agent": userAgent,
+      "Referrer": referrer,
+      "Origin": origin,
+      "Platform": secChUaPlatform.replace(/"/g, ''),
+      "Mobile": secChUaMobile === "?1" ? "Yes" : (secChUaMobile === "Unknown" ? "Unknown" : "No"),
+      "Browser Info": secChUa,
+      "Language": acceptLanguage,
     };
 
     if (!process.env.WEB3FORMS_KEY) {
