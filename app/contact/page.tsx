@@ -331,8 +331,8 @@ export default function ContactPage() {
               <div className="space-y-10 pt-2">
                 <div>
                   <p className="text-label text-brand-muted mb-3">Email</p>
-                  <a href="mailto:hello@vanspire.in" className="text-[16px] font-light text-brand-black hover:text-brand-muted transition-colors">
-                    hello@vanspire.in
+                  <a href="mailto:vanspire.innovations@gmail.com" className="text-[16px] font-light text-brand-black hover:text-brand-muted transition-colors">
+                    vanspire.innovations@gmail.com
                   </a>
                 </div>
 

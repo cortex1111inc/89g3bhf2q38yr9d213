@@ -95,7 +95,7 @@ const sections = [
   {
     title: '11. Contact',
     content: [
-      'Questions about these Terms should be directed to: hello@vanspire.in',
+      'Questions about these Terms should be directed to: vanspire.innovations@gmail.com',
       'Registered entity: Vanspire, India.',
     ],
   },

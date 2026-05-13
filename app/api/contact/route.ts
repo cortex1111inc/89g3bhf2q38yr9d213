@@ -3,7 +3,7 @@ import { getSubmissionDetails, isLikelyBot } from '@/lib/contact'
 
 export const runtime = 'nodejs'
 
-const CC_RECIPIENTS = ['hello@vanspire.in', 'adithyan.n.dileep@gmail.com']
+const CC_RECIPIENTS = ['adithyan.n.dileep@gmail.com']
 const WEB3FORMS_URL = 'https://api.web3forms.com/submit'
 
 function json(data: Record<string, unknown>, status = 200) {

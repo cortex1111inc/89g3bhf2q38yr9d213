@@ -153,7 +153,7 @@ export const knowledgeGraph: KnowledgeTopic[] = [
     title: 'Working With Vanspire',
     category: 'process',
     description: 'Every Vanspire engagement starts with a scoped conversation - no generic proposals, no off-the-shelf packages.',
-    detailedExplanation: 'To work with Vanspire, the process is straightforward:\n\n1. **Reach out** via our contact page or email hello@vanspire.in\n2. **Discovery call** - we understand your challenge, goals, and constraints\n3. **Scoped proposal** - tailored to your exact requirements, not a package\n4. **Engagement begins** - with clearly defined milestones and deliverables\n\nVanspire does not take every project. We take on work where we can deliver meaningful, enterprise-grade outcomes.\n\nWe are based in Kerala, India, and work with clients across India and internationally.',
+    detailedExplanation: 'To work with Vanspire, the process is straightforward:\n\n1. **Reach out** via our contact page or email vanspire.innovations@gmail.com\n2. **Discovery call** - we understand your challenge, goals, and constraints\n3. **Scoped proposal** - tailored to your exact requirements, not a package\n4. **Engagement begins** - with clearly defined milestones and deliverables\n\nVanspire does not take every project. We take on work where we can deliver meaningful, enterprise-grade outcomes.\n\nWe are based in Kerala, India, and work with clients across India and internationally.',
     keyConcepts: ['contact', 'hire', 'start a project', 'inquiry', 'collaborate', 'proposal'],
     relatedTopics: ['pricing'],
     intents: ['contact_request', 'implementation_details'],

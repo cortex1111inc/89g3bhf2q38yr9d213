@@ -64,7 +64,7 @@ const sections = [
       'Portability: Receive your data in a structured, machine-readable format.',
       'Objection: Object to processing based on legitimate interests or for direct marketing.',
       'Withdraw Consent: Where processing is based on consent, you may withdraw it at any time.',
-      'To exercise any of these rights, contact us at hello@vanspire.in.',
+      'To exercise any of these rights, contact us at vanspire.innovations@gmail.com.',
     ],
   },
   {
@@ -81,7 +81,7 @@ const sections = [
   },
   {
     title: '12. Contact Us',
-    body: 'For any questions, concerns, or privacy rights requests, please contact us at:\n\nVanspire\nEmail: hello@vanspire.in\nCountry: India\n\nWe are committed to resolving all legitimate privacy enquiries within 30 days.',
+    body: 'For any questions, concerns, or privacy rights requests, please contact us at:\n\nVanspire\nEmail: vanspire.innovations@gmail.com\nCountry: India\n\nWe are committed to resolving all legitimate privacy enquiries within 30 days.',
   },
 ]
 

@@ -139,7 +139,7 @@ const jsonLd = {
       contactPoint: {
         "@type": "ContactPoint",
         contactType: "customer support",
-        email: "hello@vanspire.in",
+        email: "vanspire.innovations@gmail.com",
         availableLanguage: ["English", "Malayalam", "Hindi"],
       },
     },
