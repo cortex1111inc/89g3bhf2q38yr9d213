@@ -1,136 +1,194 @@
-import "dotenv/config";
+import { NextRequest, NextResponse } from 'next/server'
+import { getSubmissionDetails, isLikelyBot } from '@/lib/contact'
 
-import { NextRequest, NextResponse } from "next/server";
+export const runtime = 'nodejs'
 
-// Recipients - Web3Forms forwards to the email registered with the access key.
-// To CC additional addresses, list them here.
-const CC_RECIPIENTS = ["hello@vanspire.in", "adithyan.n.dileep@gmail.com"];
+const CC_RECIPIENTS = ['hello@vanspire.in', 'adithyan.n.dileep@gmail.com']
+const WEB3FORMS_URL = 'https://api.web3forms.com/submit'
+
+function json(data: Record<string, unknown>, status = 200) {
+  return NextResponse.json(data, {
+    status,
+    headers: {
+      'Cache-Control': 'no-store',
+    },
+  })
+}
+
+function getTimestamp() {
+  return new Intl.DateTimeFormat('en-IN', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: 'Asia/Kolkata',
+  }).format(new Date())
+}
+
+function getRequestMetadata(req: NextRequest, extraData?: Record<string, unknown>) {
+  const forwarded = req.headers.get('x-forwarded-for')
+  const interaction =
+    extraData && typeof extraData.interaction === 'object' && extraData.interaction
+      ? (extraData.interaction as Record<string, unknown>)
+      : undefined
+  const screen =
+    extraData && typeof extraData.screen === 'object' && extraData.screen
+      ? (extraData.screen as Record<string, unknown>)
+      : undefined
+  const environment =
+    extraData && typeof extraData.environment === 'object' && extraData.environment
+      ? (extraData.environment as Record<string, unknown>)
+      : undefined
+  const botScore =
+    extraData && typeof extraData.botScore === 'number' ? extraData.botScore : 0
+
+  return {
+    botScore,
+    ipAddress:
+      forwarded?.split(',')[0]?.trim() ||
+      req.headers.get('x-real-ip') ||
+      'Unknown',
+    userAgent: req.headers.get('user-agent') || 'Unknown',
+    referrer: req.headers.get('referer') || 'Direct/None',
+    origin: req.headers.get('origin') || 'Unknown',
+    secChUa: req.headers.get('sec-ch-ua') || 'Unknown',
+    secChUaPlatform: req.headers.get('sec-ch-ua-platform') || 'Unknown',
+    secChUaMobile: req.headers.get('sec-ch-ua-mobile') || 'Unknown',
+    acceptLanguage: req.headers.get('accept-language') || 'Unknown',
+    timeOnPageText:
+      typeof interaction?.timeOnPage === 'number'
+        ? `${(interaction.timeOnPage / 1000).toFixed(1)}s`
+        : 'Unknown',
+    mouseMoved: interaction?.mouseMoved ? 'Yes' : 'No',
+    keyPressed: interaction?.keyPressed ? 'Yes' : 'No',
+    clicks: String(
+      typeof interaction?.clicks === 'number' ? interaction.clicks : 0,
+    ),
+    screenText: `${screen?.width ?? '?'}x${screen?.height ?? '?'} | TZ: ${
+      typeof extraData?.timezone === 'string' ? extraData.timezone : '?'
+    } | Cores: ${environment?.hardwareConcurrency ?? '?'} | Mem: ${
+      environment?.deviceMemory ?? '?'
+    }`,
+  }
+}
 
 export async function POST(req: NextRequest) {
+  const body = await req.json().catch(() => null)
+  const parsed = getSubmissionDetails(body)
+
+  if (!parsed.ok) {
+    return json({ error: parsed.error }, parsed.status)
+  }
+
+  const submission = parsed.data
+
+  if (!process.env.WEB3FORMS_KEY) {
+    return json({ error: 'Server misconfiguration: Missing access key.' }, 500)
+  }
+
+  if (submission.website) {
+    return json({ success: true, queued: false, ignored: true })
+  }
+
+  const metadata = getRequestMetadata(req, submission.extraData)
+  const isPotentialBot = isLikelyBot(submission)
+
+  const commonPayload = {
+    access_key: process.env.WEB3FORMS_KEY,
+    cc: CC_RECIPIENTS.join(','),
+    'Submitted At': `${getTimestamp()} IST`,
+    '--- Frontend Security Analysis ---': '-----------------------',
+    'Bot Score': String(metadata.botScore),
+    'Time on Page': metadata.timeOnPageText,
+    'Mouse Moved': metadata.mouseMoved,
+    'Key Pressed': metadata.keyPressed,
+    Clicks: metadata.clicks,
+    'Honeypot Triggered': submission.website ? 'Yes' : 'No',
+    'Client Environment': metadata.screenText,
+    '--- Server-side Meta Information ---': '-----------------------',
+    'IP Address': metadata.ipAddress,
+    'User-Agent': metadata.userAgent,
+    Referrer: metadata.referrer,
+    Origin: metadata.origin,
+    Platform: metadata.secChUaPlatform.replace(/"/g, ''),
+    Mobile:
+      metadata.secChUaMobile === '?1'
+        ? 'Yes'
+        : metadata.secChUaMobile === 'Unknown'
+          ? 'Unknown'
+          : 'No',
+    'Browser Info': metadata.secChUa,
+    Language: metadata.acceptLanguage,
+  }
+
+  const formPayload =
+    submission.intent === 'newsletter'
+      ? {
+          ...commonPayload,
+          subject: `Newsletter signup from ${submission.email}${isPotentialBot ? ' [POTENTIAL SPAM]' : ''}`,
+          from_name: 'Vanspire Website Newsletter',
+          replyto: submission.email,
+          Source: 'vanspire.in footer newsletter',
+          Email: submission.email,
+        }
+      : {
+          ...commonPayload,
+          subject: `New enquiry from ${submission.name} - ${submission.company}${isPotentialBot ? ' [POTENTIAL SPAM]' : ''}`,
+          from_name: 'Vanspire Contact Form',
+          replyto: submission.email,
+          Source: 'vanspire.in/contact',
+          'Full Name': submission.name,
+          Email: submission.email,
+          'Company / Organisation': submission.company,
+          Message: submission.message,
+        }
+
   try {
-    const body = await req.json();
-    const { name, email, company, message, website, extraData } = body;
-
-    // Basic server-side validation
-    if (!name || !email || !company || !message) {
-      return NextResponse.json(
-        { error: "All fields are required." },
-        { status: 400 },
-      );
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: "Invalid email address." },
-        { status: 400 },
-      );
-    }
-
-    const timestamp = new Date().toLocaleString("en-IN", {
-      timeZone: "Asia/Kolkata",
-    });
-
-    // Capture metadata from request
-    const forwarded = req.headers.get("x-forwarded-for");
-    const ipAddress =
-      forwarded?.split(",")[0]?.trim() ||
-      req.headers.get("x-real-ip") ||
-      "Unknown";
-    const userAgent = req.headers.get("user-agent") || "Unknown";
-    const referrer = req.headers.get("referer") || "Direct/None";
-    const origin = req.headers.get("origin") || "Unknown";
-    const secChUa = req.headers.get("sec-ch-ua") || "Unknown";
-    const secChUaPlatform = req.headers.get("sec-ch-ua-platform") || "Unknown";
-    const secChUaMobile = req.headers.get("sec-ch-ua-mobile") || "Unknown";
-    const acceptLanguage = req.headers.get("accept-language") || "Unknown";
-
-    // Security info
-    const isSourcedFromBot = !!website;
-    const botScore = extraData?.botScore ?? 0;
-    const timeOnPageText = extraData?.interaction?.timeOnPage 
-      ? `${(extraData.interaction.timeOnPage / 1000).toFixed(1)}s` 
-      : "Unknown";
-
-    // Forward via Web3Forms (free - no SMTP required)
-    // Docs: https://web3forms.com
-    const formPayload = {
-      access_key: process.env.WEB3FORMS_KEY,
-      subject: `New Enquiry from ${name} - ${company}${isSourcedFromBot || botScore >= 2 ? ' [POTENTIAL SPAM]' : ''}`,
-      from_name: "Vanspire Contact Form",
-      replyto: "vanspire.innovations@gmail.com",
-      cc: CC_RECIPIENTS.join(","),
-      // Fields shown in the email body
-      "Full Name": name,
-      Email: email,
-      "Company / Organisation": company,
-      Message: message,
-      "Submitted At": `${timestamp} IST`,
-      Source: "vanspire.in/contact",
-      "--- Frontend Security Analysis ---": "-----------------------",
-      "Bot Score": String(botScore),
-      "Time on Page": timeOnPageText,
-      "Mouse Moved": extraData?.interaction?.mouseMoved ? "Yes" : "No",
-      "Key Pressed": extraData?.interaction?.keyPressed ? "Yes" : "No",
-      "Clicks": String(extraData?.interaction?.clicks ?? 0),
-      "Honeypot Triggered": isSourcedFromBot ? "Yes" : "No",
-      "Client Environment": `${extraData?.screen?.width || '?'}x${extraData?.screen?.height || '?'} | TZ: ${extraData?.timezone || '?'} | Cores: ${extraData?.environment?.hardwareConcurrency || '?'} | Mem: ${extraData?.environment?.deviceMemory || '?'}`,
-      "--- Server-side Meta Information ---": "-----------------------",
-      "IP Address": ipAddress,
-      "User-Agent": userAgent,
-      "Referrer": referrer,
-      "Origin": origin,
-      "Platform": secChUaPlatform.replace(/"/g, ''),
-      "Mobile": secChUaMobile === "?1" ? "Yes" : (secChUaMobile === "Unknown" ? "Unknown" : "No"),
-      "Browser Info": secChUa,
-      "Language": acceptLanguage,
-    };
-
-    if (!process.env.WEB3FORMS_KEY) {
-      return NextResponse.json(
-        { error: "Server misconfiguration: Missing access key" },
-        { status: 500 },
-      );
-    }
-
-    const response = await fetch("https://api.web3forms.com/submit", {
-      method: "POST",
+    const response = await fetch(WEB3FORMS_URL, {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "User-Agent": "Mozilla/5.0 (Vercel Serverless)",
-        Origin: "https://vanspire.in",
-        Referer: "https://vanspire.in/contact",
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'User-Agent': 'Mozilla/5.0 (Vanspire Serverless)',
+        Origin: 'https://vanspire.in',
+        Referer:
+          submission.intent === 'newsletter'
+            ? 'https://vanspire.in/'
+            : 'https://vanspire.in/contact',
       },
       body: JSON.stringify(formPayload),
-    });
+      signal: AbortSignal.timeout(10000),
+      cache: 'no-store',
+    })
 
-    const text = await response.text();
+    const text = await response.text()
+    let result: Record<string, unknown> | null = null
 
-    let result;
     try {
-      result = JSON.parse(text);
+      result = text ? (JSON.parse(text) as Record<string, unknown>) : null
     } catch {
-      return NextResponse.json(
-        { error: "Invalid response from Web3Forms", raw: text },
-        { status: 500 },
-      );
+      console.error('[Contact API] Invalid Web3Forms response:', text)
+      return json({ error: 'Invalid response from the mail service.' }, 502)
     }
 
-    if (!response.ok || result.success === false) {
-      console.error("[Contact API] Web3Forms error:", result);
-      return NextResponse.json(
-        { error: result.message || "Failed to send message." },
-        { status: 500 },
-      );
+    if (!response.ok || result?.success === false) {
+      console.error('[Contact API] Web3Forms error:', result)
+      return json(
+        {
+          error:
+            typeof result?.message === 'string'
+              ? result.message
+              : 'Failed to send message.',
+        },
+        502,
+      )
     }
 
-    return NextResponse.json({ success: true }, { status: 200 });
+    return json({
+      success: true,
+      queued: false,
+      intent: submission.intent,
+    })
   } catch (error) {
-    console.error("[Contact API] Unexpected error:", error);
-    return NextResponse.json(
-      { error: "Something went wrong. Please try again." },
-      { status: 500 },
-    );
+    console.error('[Contact API] Unexpected error:', error)
+    return json({ error: 'Something went wrong. Please try again.' }, 500)
   }
 }

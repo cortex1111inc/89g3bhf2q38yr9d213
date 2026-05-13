@@ -2,10 +2,9 @@
 
 import MotionWrapper from '@/components/ui/MotionWrapper'
 import SectionLabel from '@/components/ui/SectionLabel'
-import { useState, useEffect } from 'react'
-
-// Metadata is exported from app/contact/layout.tsx (server component)
-// This is a client component due to form state
+import { useEffect, useState } from 'react'
+import { type ContactSubmissionPayload } from '@/lib/contact'
+import { flushQueuedSubmissions, queueSubmission } from '@/lib/contactQueue'
 
 type FormState = {
   name: string
@@ -14,14 +13,14 @@ type FormState = {
   message: string
 }
 
-type FormStatus = 'idle' | 'submitting' | 'success' | 'error'
+type FormStatus = 'idle' | 'submitting' | 'success' | 'queued' | 'error'
+
+const INITIAL_FORM: FormState = { name: '', email: '', company: '', message: '' }
 
 export default function ContactPage() {
-  const [form, setForm] = useState<FormState>({ name: '', email: '', company: '', message: '' })
+  const [form, setForm] = useState<FormState>(INITIAL_FORM)
   const [status, setStatus] = useState<FormStatus>('idle')
   const [errors, setErrors] = useState<Partial<FormState>>({})
-
-  // Anti-spam and security profiling
   const [interactions, setInteractions] = useState({
     mouseMoved: false,
     keyPressed: false,
@@ -33,9 +32,16 @@ export default function ContactPage() {
   useEffect(() => {
     setLoadTime(Date.now())
 
-    const handleMouseMove = () => setInteractions(prev => prev.mouseMoved ? prev : { ...prev, mouseMoved: true })
-    const handleKeyDown = () => setInteractions(prev => prev.keyPressed ? prev : { ...prev, keyPressed: true })
-    const handleClick = () => setInteractions(prev => ({ ...prev, clicks: prev.clicks + 1 }))
+    const handleMouseMove = () =>
+      setInteractions((previous) =>
+        previous.mouseMoved ? previous : { ...previous, mouseMoved: true },
+      )
+    const handleKeyDown = () =>
+      setInteractions((previous) =>
+        previous.keyPressed ? previous : { ...previous, keyPressed: true },
+      )
+    const handleClick = () =>
+      setInteractions((previous) => ({ ...previous, clicks: previous.clicks + 1 }))
 
     window.addEventListener('mousemove', handleMouseMove, { once: true })
     window.addEventListener('keydown', handleKeyDown, { once: true })
@@ -48,92 +54,135 @@ export default function ContactPage() {
     }
   }, [])
 
-  const validate = (): boolean => {
-    const newErrors: Partial<FormState> = {}
-    if (!form.name.trim()) newErrors.name = 'Name is required.'
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) newErrors.email = 'Valid email required.'
-    if (!form.company.trim()) newErrors.company = 'Company name is required.'
-    if (form.message.trim().length < 20) newErrors.message = 'Please provide more detail (min 20 characters).'
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+  useEffect(() => {
+    const syncQueuedSubmissions = async () => {
+      const result = await flushQueuedSubmissions()
+      if (result.sentIntents.includes('contact')) {
+        setStatus('success')
+      }
+    }
+
+    void syncQueuedSubmissions()
+
+    const handleOnline = () => {
+      void syncQueuedSubmissions()
+    }
+
+    window.addEventListener('online', handleOnline)
+    return () => window.removeEventListener('online', handleOnline)
+  }, [])
+
+  const validate = () => {
+    const nextErrors: Partial<FormState> = {}
+
+    if (!form.name.trim()) nextErrors.name = 'Name is required.'
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) nextErrors.email = 'Valid email required.'
+    if (!form.company.trim()) nextErrors.company = 'Company name is required.'
+    if (form.message.trim().length < 20) {
+      nextErrors.message = 'Please provide more detail (minimum 20 characters).'
+    }
+
+    setErrors(nextErrors)
+    return Object.keys(nextErrors).length === 0
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!validate()) return
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault()
+
+    if (!validate()) {
+      return
+    }
 
     setStatus('submitting')
+    setErrors({})
 
     const timeOnPage = Date.now() - loadTime
+    const clientNavigator = navigator as Navigator & {
+      deviceMemory?: number
+      doNotTrack?: string
+    }
 
     let botScore = 0
     if (!interactions.mouseMoved) botScore += 1
     if (!interactions.keyPressed) botScore += 1
     if (timeOnPage < 2000) botScore += 1
 
-    const extraData = {
-      screen: {
-        width: window.screen.width,
-        height: window.screen.height,
-        innerWidth: window.innerWidth,
-        innerHeight: window.innerHeight,
-        devicePixelRatio: window.devicePixelRatio
+    const payload: ContactSubmissionPayload = {
+      ...form,
+      website: honeypot,
+      extraData: {
+        screen: {
+          width: window.screen.width,
+          height: window.screen.height,
+          innerWidth: window.innerWidth,
+          innerHeight: window.innerHeight,
+          devicePixelRatio: window.devicePixelRatio,
+        },
+        environment: {
+          userAgent: navigator.userAgent,
+          language: navigator.language,
+          platform: navigator.platform,
+          hardwareConcurrency: navigator.hardwareConcurrency,
+          deviceMemory: clientNavigator.deviceMemory || 'Unknown',
+          cookieEnabled: navigator.cookieEnabled,
+          doNotTrack: clientNavigator.doNotTrack || 'Unknown',
+        },
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        interaction: {
+          ...interactions,
+          timeOnPage,
+        },
+        botScore,
       },
-      environment: {
-        userAgent: navigator.userAgent,
-        language: navigator.language,
-        platform: navigator.platform,
-        hardwareConcurrency: navigator.hardwareConcurrency,
-        // @ts-ignore - deviceMemory isn't standard in all TS DOM configs
-        deviceMemory: navigator.deviceMemory || 'Unknown',
-        cookieEnabled: navigator.cookieEnabled,
-        // @ts-ignore - doNotTrack isn't standard in all TS DOM configs
-        doNotTrack: navigator.doNotTrack || 'Unknown'
-      },
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      interaction: {
-        ...interactions,
-        timeOnPage
-      },
-      botScore
+    }
+
+    if (!navigator.onLine) {
+      queueSubmission(payload)
+      setStatus('queued')
+      setForm(INITIAL_FORM)
+      setHoneypot('')
+      return
     }
 
     try {
-      const res = await fetch('/api/contact', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...form,
-          website: honeypot, // honeypot field
-          extraData
-        }),
+        body: JSON.stringify(payload),
       })
 
-      const data = await res.json()
+      const data = await response.json()
 
-      if (!res.ok) {
-        // Surface server-side error to user
+      if (!response.ok) {
         setErrors({ message: data.error || 'Something went wrong. Please try again.' })
         setStatus('error')
         return
       }
 
       setStatus('success')
-      setForm({ name: '', email: '', company: '', message: '' })
-    } catch {
+      setForm(INITIAL_FORM)
+      setHoneypot('')
+    } catch (fetchError) {
+      if (!navigator.onLine || fetchError instanceof TypeError) {
+        queueSubmission(payload)
+        setStatus('queued')
+        setForm(INITIAL_FORM)
+        setHoneypot('')
+        return
+      }
+
       setErrors({ message: 'Network error. Please check your connection and try again.' })
       setStatus('error')
     }
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-    setErrors({ ...errors, [e.target.name]: '' })
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm({ ...form, [event.target.name]: event.target.value })
+    setErrors({ ...errors, [event.target.name]: '' })
   }
 
   return (
     <>
-      {/* Hero */}
       <section className="pt-40 pb-24 md:pt-48 md:pb-28 bg-white">
         <div className="container-site">
           <MotionWrapper>
@@ -156,25 +205,30 @@ export default function ContactPage() {
 
       <div className="divider" />
 
-      {/* Form + Info */}
       <section className="section-pad bg-white">
         <div className="container-site">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24">
-            {/* Form */}
             <MotionWrapper className="lg:col-span-7">
-              {status === 'success' ? (
+              {status === 'success' || status === 'queued' ? (
                 <div className="bg-brand-offwhite border border-brand-border p-12 text-center">
-                  <div className="text-4xl mb-4">✓</div>
                   <h2 className="text-xl font-light tracking-tight text-brand-black mb-3">
-                    Message received.
+                    {status === 'queued' ? 'Saved offline.' : 'Message received.'}
                   </h2>
                   <p className="text-[14px] font-light text-brand-muted">
-                    Thank you. We&apos;ll review your enquiry and respond within two business days.
+                    {status === 'queued'
+                      ? "Your enquiry is queued on this device and will sync automatically when you're back online."
+                      : "Thank you. We'll review your enquiry and respond within two business days."}
                   </p>
+                  <button
+                    type="button"
+                    onClick={() => setStatus('idle')}
+                    className="mt-6 h-[48px] px-8 bg-brand-black text-white text-[14px] font-medium hover:bg-brand-muted transition-colors duration-300"
+                  >
+                    Send another message
+                  </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} noValidate>
-                  {/* Honeypot field - Visually hidden to catch bots */}
                   <div style={{ display: 'none' }} aria-hidden="true">
                     <label htmlFor="website">Website</label>
                     <input
@@ -182,14 +236,13 @@ export default function ContactPage() {
                       name="website"
                       type="text"
                       value={honeypot}
-                      onChange={(e) => setHoneypot(e.target.value)}
+                      onChange={(event) => setHoneypot(event.target.value)}
                       tabIndex={-1}
                       autoComplete="off"
                     />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-                    {/* Name */}
                     <div>
                       <label htmlFor="name" className="text-label text-brand-muted block mb-2">
                         Full Name *
@@ -208,7 +261,6 @@ export default function ContactPage() {
                       {errors.name && <p className="text-red-400 text-[12px] mt-1">{errors.name}</p>}
                     </div>
 
-                    {/* Email */}
                     <div>
                       <label htmlFor="email" className="text-label text-brand-muted block mb-2">
                         Email Address *
@@ -228,7 +280,6 @@ export default function ContactPage() {
                     </div>
                   </div>
 
-                  {/* Company */}
                   <div className="mb-6">
                     <label htmlFor="company" className="text-label text-brand-muted block mb-2">
                       Company / Organisation *
@@ -247,7 +298,6 @@ export default function ContactPage() {
                     {errors.company && <p className="text-red-400 text-[12px] mt-1">{errors.company}</p>}
                   </div>
 
-                  {/* Message */}
                   <div className="mb-8">
                     <label htmlFor="message" className="text-label text-brand-muted block mb-2">
                       Message *
@@ -277,7 +327,6 @@ export default function ContactPage() {
               )}
             </MotionWrapper>
 
-            {/* Info panel */}
             <MotionWrapper delay={0.15} className="lg:col-span-5">
               <div className="space-y-10 pt-2">
                 <div>

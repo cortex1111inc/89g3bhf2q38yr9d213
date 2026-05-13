@@ -17,19 +17,19 @@ interface ChatMessageProps {
 }
 
 function renderText(text: string): ReactNode[] {
-  // Regex to match [link label](url)
   const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g
   const parts: ReactNode[] = []
   let lastIndex = 0
-  let match
+  let match: RegExpExecArray | null
 
   while ((match = linkRegex.exec(text)) !== null) {
     if (match.index > lastIndex) {
       parts.push(text.substring(lastIndex, match.index))
     }
+
     const label = match[1]
     const href = match[2]
-    
+
     parts.push(
       <a
         key={match.index}
@@ -39,8 +39,9 @@ function renderText(text: string): ReactNode[] {
         className="font-medium underline decoration-white/30 underline-offset-2 hover:decoration-white transition-all duration-200"
       >
         {label}
-      </a>
+      </a>,
     )
+
     lastIndex = match.index + match[0].length
   }
 
@@ -68,29 +69,26 @@ export default function ChatMessage({ message, index }: ChatMessageProps) {
             : 'bg-[#1e1e1e] text-[#e5e5e5] border border-[#5e5e5e] rounded-2xl rounded-bl-sm px-4 py-3'
         }`}
       >
-        {/* Message text - render line breaks and links */}
-        {message.text.split('\n\n').map((para, pIdx) => (
+        {message.text.split('\n\n').map((paragraph, paragraphIndex) => (
           <p
-            key={pIdx}
+            key={paragraphIndex}
             className={`text-[13.5px] font-light leading-[1.7] ${
-              pIdx > 0 ? 'mt-2' : ''
+              paragraphIndex > 0 ? 'mt-2' : ''
             } ${isUser ? 'text-[#0a0a0a]' : 'text-[#d4d4d4]'}`}
           >
-            {renderText(para)}
+            {renderText(paragraph)}
           </p>
         ))}
 
-        {/* CTA link for bot messages */}
         {!isUser && message.cta && (
           <Link
             href={message.cta.href}
             className="inline-flex items-center gap-1.5 mt-3 text-[12px] font-medium text-white border-b border-white/20 pb-0.5 hover:border-white transition-colors"
           >
-            {message.cta.label} <span>→</span>
+            {message.cta.label} <span aria-hidden="true">-&gt;</span>
           </Link>
         )}
       </div>
-
     </motion.div>
   )
 }

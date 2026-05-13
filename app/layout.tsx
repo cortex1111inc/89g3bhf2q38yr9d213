@@ -1,5 +1,4 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import "./globals.css";
 import Header from "@/components/layout/Header";
@@ -9,18 +8,13 @@ import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import ChatBot from "@/components/chat/ChatBot";
 import GoogleAnalytics from "@/components/Analytics";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-  weight: ["300", "400", "500", "600"],
-});
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://vanspire.in";
+import ServiceWorkerRegister from "@/components/pwa/ServiceWorkerRegister";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  applicationName: "Vanspire",
+  manifest: "/manifest.webmanifest",
 
   title: {
     default: "Vanspire | Best Software, Web & App Development Company in India",
@@ -79,7 +73,7 @@ export const metadata: Metadata = {
     description:
       "Vanspire offers the best software solutions, website development, mobile apps, IoT, and digital marketing in India and Kerala.",
     images: ["/ogimage.webp"],
-    creator: "@vanspirein", // Assuming twitter handle
+    creator: "@vanspirein",
   },
 
   robots: {
@@ -97,15 +91,27 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.ico?v=2",
     shortcut: "/favicon.ico?v=2",
-    apple: "/apple-touch-icon.png",
+    apple: "/icon-192.svg",
   },
 
   alternates: {
     canonical: SITE_URL,
   },
+
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Vanspire",
+  },
 };
 
-// JSON-LD Structured Data - Organization + Website schema + LocalBusiness
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#0a0a0a",
+  colorScheme: "light",
+};
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
@@ -120,7 +126,7 @@ const jsonLd = {
         "https://www.instagram.com/vanspire.innovations/",
         "https://twitter.com/vanspirein",
         "https://www.youtube.com/@vanspire",
-        "https://www.facebook.com/vanspire"
+        "https://www.facebook.com/vanspire",
       ],
       description:
         "Vanspire Innovations is the best software solutions, website development, mobile apps, and digital marketing company in India and Kerala, specializing in IoT and cloud infrastructure.",
@@ -133,8 +139,8 @@ const jsonLd = {
       contactPoint: {
         "@type": "ContactPoint",
         contactType: "customer support",
-        email: "hello@vanspire.in", // This is fine in JSON-LD, spiders render text.
-        availableLanguage: ["English", "Malayalam", "Hindi"]
+        email: "hello@vanspire.in",
+        availableLanguage: ["English", "Malayalam", "Hindi"],
       },
     },
     {
@@ -155,10 +161,10 @@ const jsonLd = {
       address: {
         "@type": "PostalAddress",
         addressCountry: "IN",
-        addressRegion: "Kerala"
+        addressRegion: "Kerala",
       },
-      priceRange: "$$"
-    }
+      priceRange: "$$",
+    },
   ],
 };
 
@@ -168,7 +174,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
+    <html lang="en">
       <head>
         <script
           type="application/ld+json"
@@ -182,6 +188,7 @@ export default function RootLayout({
         </LayoutWrapper>
         <Footer />
         <ChatBot />
+        <ServiceWorkerRegister />
         <Suspense fallback={null}>
           <GoogleAnalytics />
         </Suspense>

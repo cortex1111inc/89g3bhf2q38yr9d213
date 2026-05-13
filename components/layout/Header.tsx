@@ -37,6 +37,25 @@ export default function Header() {
     return () => { document.body.style.overflow = '' }
   }, [menuOpen])
 
+  useEffect(() => {
+    setMenuOpen(false)
+  }, [pathname])
+
+  useEffect(() => {
+    if (!menuOpen) {
+      return
+    }
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setMenuOpen(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [menuOpen])
+
   const isSolid = !isDarkHeroRoute || scrolled
   const navTextColor = isSolid ? 'text-brand-black hover:text-brand-muted' : 'text-white/80 hover:text-white'
   const logoSrc = isSolid ? '/blacklogo.svg' : '/whitelogo.svg'
@@ -100,6 +119,8 @@ export default function Header() {
         <button
           onClick={() => setMenuOpen(true)}
           aria-label="Open navigation menu"
+          aria-controls="mobile-navigation"
+          aria-expanded={menuOpen}
           className="lg:hidden p-2"
         >
           <Menu
@@ -118,6 +139,7 @@ export default function Header() {
         <div className="absolute inset-0 bg-black/40" onClick={() => setMenuOpen(false)} />
 
         <div
+          id="mobile-navigation"
           className={`absolute top-0 right-0 h-full w-full max-w-sm bg-white flex flex-col transform transition-transform duration-300 ease-out ${
             menuOpen ? 'translate-x-0' : 'translate-x-full'
           }`}

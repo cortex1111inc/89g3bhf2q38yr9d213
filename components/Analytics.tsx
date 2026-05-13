@@ -14,7 +14,17 @@ export const pageview = (url: string) => {
   }
 };
 
-export const event = ({ action, category, label, value }: { action: string; category: string; label: string; value: number }) => {
+export const event = ({
+  action,
+  category,
+  label,
+  value,
+}: {
+  action: string
+  category: string
+  label?: string
+  value?: number
+}) => {
   if (typeof window !== 'undefined' && window.gtag && GA_TRACKING_ID) {
     window.gtag('event', action, {
       event_category: category,
@@ -27,12 +37,14 @@ export const event = ({ action, category, label, value }: { action: string; cate
 export default function GoogleAnalytics() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const search = searchParams?.toString() ?? '';
+  const url = search ? `${pathname}?${search}` : pathname;
 
   useEffect(() => {
-    if (pathname && GA_TRACKING_ID) {
-      pageview(pathname);
+    if (url && GA_TRACKING_ID) {
+      pageview(url);
     }
-  }, [pathname, searchParams]);
+  }, [url]);
 
   if (!GA_TRACKING_ID) {
     return null;
@@ -53,7 +65,7 @@ export default function GoogleAnalytics() {
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', '${GA_TRACKING_ID}', {
-              page_path: window.location.pathname,
+              page_path: window.location.pathname + window.location.search,
             });
           `,
         }}

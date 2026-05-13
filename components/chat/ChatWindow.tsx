@@ -15,7 +15,7 @@ const GREETING: Message = {
 }
 
 function generateId() {
-  return Math.random().toString(36).slice(2, 9)
+  return globalThis.crypto?.randomUUID?.() ?? Math.random().toString(36).slice(2, 9)
 }
 
 function generateFollowUpQuestions(lastMessage: string) {
@@ -72,10 +72,20 @@ export default function ChatWindow({ onClose }: ChatWindowProps) {
   }, [messages, isTyping])
 
   useEffect(() => {
-    // Small delay so animation completes before focus
-    const t = setTimeout(() => inputRef.current?.focus(), 400)
-    return () => clearTimeout(t)
+    const timer = setTimeout(() => inputRef.current?.focus(), 400)
+    return () => clearTimeout(timer)
   }, [])
+
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [onClose])
 
   async function handleSend(text?: string) {
     const query = (text ?? input).trim()
@@ -84,16 +94,31 @@ export default function ChatWindow({ onClose }: ChatWindowProps) {
     setInput('')
     setShowSuggested(false)
 
-    const userMsg: Message = {
+    const userMessage: Message = {
       id: generateId(),
       role: 'user',
       text: query,
     }
-    setMessages((prev) => [...prev, userMsg])
+
+    setMessages((prev) => [...prev, userMessage])
     setIsTyping(true)
 
     try {
-      const res = await fetch('/api/chat', {
+      if (!navigator.onLine) {
+        const fallback = findBestMatch(query)
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: generateId(),
+            role: 'bot',
+            text: fallback.response,
+            cta: fallback.cta,
+          },
+        ])
+        return
+      }
+
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -101,38 +126,47 @@ export default function ChatWindow({ onClose }: ChatWindowProps) {
         body: JSON.stringify({ message: query }),
       })
 
-      if (!res.ok) throw new Error('API Request Failed')
-
-      const data = await res.json()
-
-      const botMsg: Message = {
-        id: generateId(),
-        role: 'bot',
-        text: data.reply,
+      if (!response.ok) {
+        throw new Error('API request failed')
       }
-      setMessages((prev) => [...prev, botMsg])
+
+      const data = await response.json()
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: generateId(),
+          role: 'bot',
+          text: data.reply,
+          cta: data.cta,
+        },
+      ])
     } catch (error) {
       console.error('Chat Error:', error)
-      const errorMsg: Message = {
-        id: generateId(),
-        role: 'bot',
-        text: 'I encountered an issue connecting to my semantic core. Please check your internet connection and verify that the Groq API key is valid in your `.env.local` file. If the issue persists, feel free to [contact our team](https://vanspire.in/contact).',
-      }
-      setMessages((prev) => [...prev, errorMsg])
+      const fallback = findBestMatch(query)
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: generateId(),
+          role: 'bot',
+          text: fallback.response,
+          cta: fallback.cta,
+        },
+      ])
     } finally {
       setIsTyping(false)
     }
   }
 
-  function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSend()
+  function handleKeyDown(event: React.KeyboardEvent) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault()
+      void handleSend()
     }
   }
 
   function handleSuggestedSelect(question: string) {
-    handleSend(question)
+    void handleSend(question)
   }
 
   return (
@@ -144,10 +178,8 @@ export default function ChatWindow({ onClose }: ChatWindowProps) {
       className="flex flex-col bg-[#111111] border border-[#2a2a2a] shadow-2xl shadow-black/40 rounded-2xl overflow-hidden"
       style={{ width: 'min(380px, calc(100vw - 32px))', height: 'min(560px, calc(100dvh - 100px))' }}
     >
-      {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-[#2a2a2a] flex-shrink-0 bg-[#111111]">
         <div className="flex items-center gap-3">
-          {/* Status dot */}
           <div className="relative flex-shrink-0">
             <div className="w-8.5 h-8.5 rounded-full overflow-hidden bg-[#1e1e1e] flex items-center justify-center border border-[#3d3d3d]">
               <Image src="/brain.webp" alt="Eon Avatar" width={32} height={32} className="w-full h-full object-cover" />
@@ -170,14 +202,11 @@ export default function ChatWindow({ onClose }: ChatWindowProps) {
         </button>
       </div>
 
-      {/* Body - scrollable */}
       <div className="flex-1 flex flex-col overflow-y-auto overscroll-contain px-4 pt-4 pb-2 gap-3">
-        {/* Messages */}
-        {messages.map((msg, i) => (
-          <ChatMessage key={msg.id} message={msg} index={i} />
+        {messages.map((message, index) => (
+          <ChatMessage key={message.id} message={message} index={index} />
         ))}
 
-        {/* Typing indicator */}
         <AnimatePresence>
           {isTyping && (
             <motion.div
@@ -195,7 +224,6 @@ export default function ChatWindow({ onClose }: ChatWindowProps) {
           )}
         </AnimatePresence>
 
-        {/* Suggested questions */}
         <AnimatePresence>
           {showSuggested && (
             <motion.div
@@ -205,8 +233,8 @@ export default function ChatWindow({ onClose }: ChatWindowProps) {
               transition={{ duration: 0.2 }}
               className="-mx-4"
             >
-              <SuggestedQuestions 
-                onSelect={handleSuggestedSelect} 
+              <SuggestedQuestions
+                onSelect={handleSuggestedSelect}
                 questions={
                   messages.length > 1
                     ? generateFollowUpQuestions(messages[messages.length - 1].text)
@@ -220,33 +248,32 @@ export default function ChatWindow({ onClose }: ChatWindowProps) {
         <div ref={bottomRef} className="h-1 flex-shrink-0" />
       </div>
 
-      {/* Input bar */}
       <div className="flex-shrink-0 border-t border-[#2a2a2a] px-4 py-3 bg-[#111111]">
         <div className="flex items-center gap-2 bg-[#1a1a1a] rounded-xl px-4 py-2.5 border border-[#2a2a2a] focus-within:border-[#555555] transition-colors">
           <input
             ref={inputRef}
             type="text"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(event) => setInput(event.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask about our services…"
+            placeholder="Ask about our services..."
             className="flex-1 bg-transparent text-[13.5px] font-light text-white placeholder:text-[#ffffff]/80 outline-none min-w-0"
             aria-label="Chat input"
           />
           <motion.button
-            onClick={() => handleSend()}
+            onClick={() => void handleSend()}
             disabled={!input.trim() || isTyping}
             whileTap={{ scale: 0.9 }}
             aria-label="Send message"
             className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-white text-[#0a0a0a] disabled:opacity-20 transition-opacity"
           >
-             <svg viewBox="0 0 16 16" fill="none" className="w-3.5 h-3.5">
+            <svg viewBox="0 0 16 16" fill="none" className="w-3.5 h-3.5">
               <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </motion.button>
         </div>
         <p className="text-[10px] text-center text-[#ffffff]/40 mt-2 tracking-wide">
-          Eon · Our Enterprise Brain
+          Eon | Our Enterprise Brain
         </p>
       </div>
     </motion.div>
