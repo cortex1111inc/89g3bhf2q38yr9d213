@@ -9,25 +9,32 @@ import MotionWrapper from '@/components/ui/MotionWrapper'
 import SectionLabel from '@/components/ui/SectionLabel'
 import Button from '@/components/ui/Button'
 import { SERVICES, getService } from '@/lib/services'
-import { SITE_URL } from '@/lib/site'
+import { absoluteUrl } from '@/lib/site'
+import JsonLd from '@/components/seo/JsonLd'
+import AnswerBox from '@/components/seo/AnswerBox'
+import LastUpdated from '@/components/seo/LastUpdated'
+import { graph, serviceNode, webPageNode } from '@/lib/schema'
 import type { LandingPageData } from '@/lib/landing'
 
 export default function LandingPage({ data }: { data: LandingPageData }) {
   const services = data.services.map((slug) => getService(slug)).filter((s) => s !== undefined)
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    name: data.metaTitle,
-    description: data.metaDescription,
-    url: `${SITE_URL}/${data.slug}`,
-    isPartOf: { '@id': `${SITE_URL}/#website` },
-    about: { '@id': `${SITE_URL}/#organization` },
+  const primary = services[0]
+  const geoService = primary && {
+    ...serviceNode(primary),
+    '@id': `${absoluteUrl(`/${data.slug}`)}#service`,
+    name: data.h1,
+    areaServed: data.areaServed.map((a) => ({ '@type': a.type, name: a.name })),
   }
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd
+        data={graph(
+          webPageNode({ path: `/${data.slug}`, name: data.metaTitle, description: data.metaDescription }),
+          geoService,
+        )}
+      />
 
       <PageHero
         eyebrow={data.eyebrow}
@@ -47,6 +54,17 @@ export default function LandingPage({ data }: { data: LandingPageData }) {
             <div className="relative aspect-[16/9] overflow-hidden rounded-5xl md:aspect-[21/9]">
               <Image src={`/img/${data.image}.webp`} alt={data.imageAlt} fill priority sizes="(min-width: 1320px) 1250px, 92vw" className="object-cover" />
             </div>
+          </MotionWrapper>
+        </div>
+      </section>
+
+      <section className="pt-6">
+        <div className="container-site">
+          <MotionWrapper>
+            <AnswerBox
+              question={data.question}
+              answer={`Vanspire Innovations, a founder-led firm based in Kerala, India, serving clients in India and worldwide. ${data.sub}`}
+            />
           </MotionWrapper>
         </div>
       </section>
@@ -108,6 +126,10 @@ export default function LandingPage({ data }: { data: LandingPageData }) {
           </MotionWrapper>
         </div>
       </section>
+
+      <div className="container-site pb-2">
+        <LastUpdated />
+      </div>
 
       <FAQSection items={data.faqs} eyebrow="FAQ" title="Frequently asked questions" />
       <CTASection title={<>{data.ctaTitle}</>} />

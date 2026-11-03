@@ -6,20 +6,16 @@ import FAQSection from '@/components/sections/FAQSection'
 import MotionWrapper from '@/components/ui/MotionWrapper'
 import { GENERAL_FAQS } from '@/lib/content'
 import { SITE } from '@/lib/site'
+import JsonLd from '@/components/seo/JsonLd'
+import { buildMetadata } from '@/lib/seo'
+import { IDS } from '@/lib/site'
+import { graph, webPageNode } from '@/lib/schema'
 
-export const metadata: Metadata = {
-  title: 'Contact Vanspire | Start Your Project',
-  description:
-    'Talk to Vanspire about custom software, AI and automation, mobile apps, web platforms, cloud, IT consulting or digital marketing. We respond within two business days.',
-  openGraph: {
-    title: 'Contact Vanspire | Start Your Project',
-    description:
-      'Tell us what you are building. Vanspire responds to every enquiry within two business days.',
-    url: '/contact',
-    images: [{ url: '/ogimage.webp', width: 1200, height: 630, alt: 'Contact Vanspire' }],
-  },
-  alternates: { canonical: '/contact' },
-}
+const TITLE = 'Contact Us: Start Your Project'
+const DESCRIPTION =
+  'Talk to Vanspire about custom software, AI, mobile apps, web, cloud, IT consulting or marketing. We respond to every enquiry within two business days.'
+
+export const metadata: Metadata = buildMetadata({ title: TITLE, description: DESCRIPTION, path: '/contact' })
 
 const details = [
   { icon: Mail, label: 'Email', value: SITE.email, href: `mailto:${SITE.email}` },
@@ -36,6 +32,11 @@ const NEXT_STEPS = [
 export default function ContactPage() {
   return (
     <>
+      <JsonLd
+        data={graph(
+          webPageNode({ path: '/contact', name: TITLE, description: DESCRIPTION, type: 'ContactPage', extra: { mainEntity: { '@id': IDS.organization } } }),
+        )}
+      />
       <PageHero
         eyebrow="Contact"
         breadcrumbs={[{ name: 'Contact' }]}

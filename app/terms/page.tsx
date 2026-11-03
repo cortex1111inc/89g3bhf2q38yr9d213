@@ -1,12 +1,15 @@
 import type { Metadata } from 'next'
 import MotionWrapper from '@/components/ui/MotionWrapper'
+import { buildMetadata } from '@/lib/seo'
+import JsonLd from '@/components/seo/JsonLd'
+import { breadcrumbList, graph } from '@/lib/schema'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: 'Terms & Conditions',
   description:
-    'Terms and Conditions for using Vanspire and its services. Governed by the laws of India. Please read these terms carefully before using our platforms or engaging our services.',
-  alternates: { canonical: '/terms' },
-}
+    'Vanspire terms and conditions governing use of our website and services.',
+  path: '/terms',
+})
 
 const sections = [
   {
@@ -103,7 +106,9 @@ const sections = [
 
 export default function TermsPage() {
   return (
-    <section className="pt-40 pb-24 md:pt-48 md:pb-28 bg-white text-brand-black">
+    <>
+      <JsonLd data={graph(breadcrumbList([{ name: 'Terms & Conditions' }]))} />
+      <section className="pt-40 pb-24 md:pt-48 md:pb-28 bg-white text-brand-black">
       <div className="container-site max-w-[860px]">
         <MotionWrapper>
           <p className="text-label text-brand-muted mb-3">Last Updated: January 2026</p>
@@ -139,6 +144,7 @@ export default function TermsPage() {
           ))}
         </div>
       </div>
-    </section>
+      </section>
+    </>
   )
 }

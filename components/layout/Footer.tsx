@@ -119,7 +119,7 @@ export default function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="px-3 pb-3 md:px-4 md:pb-4">
+    <footer className="px-3 pb-3 md:px-4 md:pb-4" aria-label="Site footer">
       <div className="overflow-hidden rounded-5xl bg-ink text-white">
         <div className="container-site py-16 md:py-20">
           <div className="mb-16 grid gap-12 lg:grid-cols-2 lg:gap-24">
@@ -131,7 +131,7 @@ export default function Footer() {
                 A product and IT firm. We design, build and grow software, AI, mobile and web products, and the
                 marketing that brings them to market.
               </p>
-              <ul className="mb-8 space-y-3 text-[14px] text-white/55">
+              <address className="mb-8 not-italic"><ul className="space-y-3 text-[14px] text-white/55">
                 <li className="flex items-center gap-3">
                   <MapPin size={15} className="shrink-0 text-accent" aria-hidden="true" />
                   {SITE.location}
@@ -142,7 +142,7 @@ export default function Footer() {
                     {SITE.email}
                   </a>
                 </li>
-              </ul>
+              </ul></address>
               <div className="flex gap-2">
                 {socials.map(({ name, href, Icon }) => (
                   <a
@@ -161,11 +161,11 @@ export default function Footer() {
 
             <div>
               <p className="mb-4 text-[11px] uppercase tracking-widest text-white/40">Stay informed</p>
-              <h3 className="mb-6 text-3xl font-semibold leading-tight tracking-tighter md:text-4xl">
+              <p className="mb-6 text-3xl font-semibold leading-tight tracking-tighter md:text-4xl">
                 Practical thinking on tech,
                 <br />
                 straight to your inbox.
-              </h3>
+              </p>
               <form onSubmit={handleSubscribe} className="w-full sm:max-w-md" noValidate>
                 <label htmlFor="footer-email" className="sr-only">
                   Email address

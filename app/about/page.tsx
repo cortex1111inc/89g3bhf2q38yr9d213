@@ -7,60 +7,26 @@ import Lifecycle from '@/components/sections/Lifecycle'
 import MotionWrapper from '@/components/ui/MotionWrapper'
 import SectionLabel from '@/components/ui/SectionLabel'
 import Button from '@/components/ui/Button'
+import FactSheet from '@/components/seo/FactSheet'
+import AnswerBox from '@/components/seo/AnswerBox'
+import JsonLd from '@/components/seo/JsonLd'
+import LastUpdated from '@/components/seo/LastUpdated'
 import { VALUES } from '@/lib/content'
-import { SITE_URL } from '@/lib/site'
+import { TEAM, FOUNDERS_SENTENCE } from '@/lib/people'
+import { buildMetadata } from '@/lib/seo'
+import { graph, webPageNode } from '@/lib/schema'
+import { IDS } from '@/lib/site'
 
-export const metadata: Metadata = {
-  title: 'About Vanspire | A Founder-Led Product & IT Firm',
-  description:
-    'Vanspire is a founder-led product and IT firm in Kerala, India. Meet the team behind our software, AI, mobile, web, cloud and marketing work, and the principles we build by.',
-  keywords: [
-    'about Vanspire',
-    'software company Kerala',
-    'founder-led IT firm India',
-    'product and IT consulting firm',
-    'Vanspire team',
-  ],
-  openGraph: {
-    title: 'About Vanspire | A Founder-Led Product & IT Firm',
-    description:
-      'A small, senior, founder-led firm that takes products from idea to infrastructure to growth. Meet the people behind Vanspire.',
-    url: '/about',
-    images: [{ url: '/ogimage.webp', width: 1200, height: 630, alt: 'About Vanspire' }],
-  },
-  alternates: { canonical: '/about' },
-}
+const TITLE = 'About Vanspire: Founder-Led Product & IT Firm'
+const DESCRIPTION =
+  'Meet the founders of Vanspire: Akshay Krishna (CEO), Adithyan Dileep (Founding Director & COO), Vyshnav M and Sreehari S. A product and IT firm in Kerala, India.'
 
-const team = [
-  {
-    name: 'Akshay Krishna',
-    role: 'Venture Operations',
-    linkedin: 'https://www.linkedin.com/in/akshay-krishna-20764723a/',
-    bio: 'Focusing on structuring delivery systems and operational frameworks that support our growth.',
-    image: '/akshay.png',
-  },
-  {
-    name: 'Vyshnav M',
-    role: 'Growth & Markets',
-    linkedin: 'https://www.linkedin.com/in/vyshnavmancheri/',
-    bio: 'Drives digital growth, market visibility, and strategic positioning across Vanspire projects.',
-    image: '/vyshnav.webp',
-  },
-  {
-    name: 'Sreehari S',
-    role: 'Systems & Infra',
-    linkedin: 'https://www.linkedin.com/in/sreehari-s-5a2a592b9/',
-    bio: 'Focusing on building scalable systems and core technological foundations for Vanspire clients.',
-    image: '/sreehari.webp',
-  },
-  {
-    name: 'Adithyan Dileep',
-    role: 'Product & Innovation',
-    linkedin: 'https://www.linkedin.com/in/adithyan-dileep/',
-    bio: 'Focusing on shaping product direction and turning ideas into impactful digital solutions.',
-    image: '/adithyan.webp',
-  },
-]
+export const metadata: Metadata = buildMetadata({
+  title: TITLE,
+  description: DESCRIPTION,
+  path: '/about',
+  keywords: ['about Vanspire', 'Vanspire founders', 'Akshay Krishna CEO', 'Adithyan Dileep founding director COO', 'software company Kerala'],
+})
 
 const pillars = [
   {
@@ -81,28 +47,19 @@ const pillars = [
 ]
 
 export default function AboutPage() {
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'AboutPage',
-    name: 'About Vanspire | A Founder-Led Product & IT Firm',
-    description:
-      'Vanspire is a founder-led product and IT firm in Kerala, India building software, AI, mobile, web, cloud and marketing.',
-    url: `${SITE_URL}/about`,
-    mainEntity: {
-      '@type': 'Organization',
-      name: 'Vanspire Innovations',
-      founder: team.map((t) => ({
-        '@type': 'Person',
-        name: t.name,
-        jobTitle: t.role,
-        sameAs: t.linkedin,
-      })),
-    },
-  }
-
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd
+        data={graph(
+          webPageNode({
+            path: '/about',
+            name: TITLE,
+            description: DESCRIPTION,
+            type: 'AboutPage',
+            extra: { mainEntity: { '@id': IDS.organization } },
+          }),
+        )}
+      />
 
       <PageHero
         eyebrow="About us"
@@ -129,6 +86,20 @@ export default function AboutPage() {
               </div>
             </MotionWrapper>
           </div>
+        </div>
+      </section>
+
+      <section className="pt-6">
+        <div className="container-site grid gap-4 lg:grid-cols-12 lg:items-start">
+          <MotionWrapper className="lg:col-span-5">
+            <AnswerBox
+              question="Who founded Vanspire?"
+              answer={`Vanspire was founded in 2024 by four co-founders: ${FOUNDERS_SENTENCE}. It is a founder-led product and IT firm based in Kerala, India.`}
+            />
+          </MotionWrapper>
+          <MotionWrapper delay={0.1} className="lg:col-span-7">
+            <FactSheet />
+          </MotionWrapper>
         </div>
       </section>
 
@@ -184,14 +155,15 @@ export default function AboutPage() {
               <h2 className="text-display-md">The people behind Vanspire.</h2>
             </div>
             <p className="max-w-sm text-ink/60">
-              Four founders, four disciplines. You will work directly with us, not an account manager.
+              Four co-founders, four disciplines. Akshay Krishna leads as CEO and Adithyan Dileep is Founding Director
+              and COO. You will work directly with us, not an account manager.
             </p>
           </MotionWrapper>
 
           <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 md:gap-6">
-            {team.map((member, i) => (
+            {TEAM.map((member, i) => (
               <MotionWrapper key={member.name} delay={i * 0.1}>
-                <div className="group">
+                <div id={member.id} className="group scroll-mt-32">
                   <div className="relative mb-5 aspect-[2/2.5] w-full overflow-hidden rounded-4xl bg-white">
                     <Image
                       src={member.image}
@@ -243,6 +215,10 @@ export default function AboutPage() {
           </MotionWrapper>
         </div>
       </section>
+
+      <div className="container-site pb-6">
+        <LastUpdated />
+      </div>
 
       <CTASection />
     </>

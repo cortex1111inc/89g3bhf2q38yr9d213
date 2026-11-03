@@ -10,38 +10,30 @@ import MotionWrapper from '@/components/ui/MotionWrapper'
 import SectionLabel from '@/components/ui/SectionLabel'
 import Button from '@/components/ui/Button'
 import { SERVICES } from '@/lib/services'
-import { SITE_URL } from '@/lib/site'
+import JsonLd from '@/components/seo/JsonLd'
+import { buildMetadata } from '@/lib/seo'
+import { graph, itemListNode, webPageNode } from '@/lib/schema'
 
-export const metadata: Metadata = {
-  title: 'Services: Software, AI, Mobile, Web, Cloud, IT Consulting & Marketing',
-  description:
-    'Vanspire services: custom software development, AI and automation, mobile apps, web platforms, product design, cloud and DevOps, IT consulting and digital marketing, all from one team.',
-  alternates: { canonical: '/services' },
-  openGraph: {
-    title: 'Vanspire Services | Product to IT, One Firm',
-    description:
-      'Custom software, AI, mobile, web, cloud, IT consulting and digital marketing delivered by one senior team.',
-    url: '/services',
-    images: [{ url: '/ogimage.webp', width: 1200, height: 630, alt: 'Vanspire services' }],
-  },
-}
+const TITLE = 'Services: Software, AI, Mobile, Web & Marketing'
+const DESCRIPTION =
+  'Custom software, AI and automation, mobile apps, web platforms, product design, cloud and DevOps, IT consulting and digital marketing, delivered by one senior team.'
+
+export const metadata: Metadata = buildMetadata({
+  title: TITLE,
+  description: DESCRIPTION,
+  path: '/services',
+  keywords: ['software development services', 'AI automation services', 'mobile app development services', 'IT consulting services', 'digital marketing services India'],
+})
 
 export default function ServicesPage() {
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    name: 'Vanspire services',
-    itemListElement: SERVICES.map((service, i) => ({
-      '@type': 'ListItem',
-      position: i + 1,
-      name: service.name,
-      url: `${SITE_URL}/services/${service.slug}`,
-    })),
-  }
-
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd
+        data={graph(
+          webPageNode({ path: '/services', name: TITLE, description: DESCRIPTION, type: 'CollectionPage' }),
+          itemListNode('Vanspire services', SERVICES.map((s) => ({ name: s.name, path: `/services/${s.slug}` }))),
+        )}
+      />
       <PageHero
         eyebrow="Services"
         breadcrumbs={[{ name: 'Services' }]}

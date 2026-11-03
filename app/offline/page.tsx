@@ -3,6 +3,7 @@ import Link from 'next/link'
 export const metadata = {
   title: 'Offline',
   description: 'You are offline. Cached Vanspire pages remain available while the network is unavailable.',
+  robots: { index: false, follow: false },
 }
 
 export default function OfflinePage() {

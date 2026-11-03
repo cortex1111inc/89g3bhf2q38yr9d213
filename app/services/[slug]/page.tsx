@@ -14,7 +14,11 @@ import SectionLabel from '@/components/ui/SectionLabel'
 import Button from '@/components/ui/Button'
 import { SERVICES, getService } from '@/lib/services'
 import { WORK } from '@/lib/work'
-import { SITE_URL } from '@/lib/site'
+import JsonLd from '@/components/seo/JsonLd'
+import AnswerBox from '@/components/seo/AnswerBox'
+import LastUpdated from '@/components/seo/LastUpdated'
+import { buildMetadata } from '@/lib/seo'
+import { graph, serviceNode, webPageNode } from '@/lib/schema'
 
 type Params = { slug: string }
 
@@ -27,17 +31,13 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const service = getService(slug)
   if (!service) return {}
 
-  return {
+  return buildMetadata({
     title: service.metaTitle,
     description: service.metaDescription,
-    alternates: { canonical: `/services/${service.slug}` },
-    openGraph: {
-      title: `${service.metaTitle} | Vanspire`,
-      description: service.metaDescription,
-      url: `/services/${service.slug}`,
-      images: [{ url: '/ogimage.webp', width: 1200, height: 630, alt: service.name }],
-    },
-  }
+    path: `/services/${service.slug}`,
+    image: 'file',
+    keywords: [service.name.toLowerCase(), ...service.tags.map((t) => t.toLowerCase()), 'Vanspire'],
+  })
 }
 
 export default async function ServicePage({ params }: { params: Promise<Params> }) {
@@ -49,20 +49,14 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
   const index = SERVICES.findIndex((s) => s.slug === service.slug)
   const others = [...SERVICES.slice(index + 1), ...SERVICES.slice(0, index)].slice(0, 4)
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Service',
-    name: service.name,
-    description: service.metaDescription,
-    url: `${SITE_URL}/services/${service.slug}`,
-    provider: { '@type': 'Organization', name: 'Vanspire Innovations', url: SITE_URL },
-    areaServed: ['IN', 'Worldwide'],
-    serviceType: service.name,
-  }
-
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd
+        data={graph(
+          webPageNode({ path: `/services/${service.slug}`, name: service.metaTitle, description: service.metaDescription }),
+          serviceNode(service),
+        )}
+      />
 
       <PageHero
         eyebrow="Service"
@@ -96,6 +90,19 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
                 className="object-cover"
               />
             </div>
+          </MotionWrapper>
+        </div>
+      </section>
+
+      <section className="pt-6">
+        <div className="container-site">
+          <MotionWrapper>
+            <AnswerBox
+              question={`What is ${service.name.toLowerCase()}?`}
+              answer={service.definition}
+              extraLabel="Who it is for:"
+              extra={service.whoFor}
+            />
           </MotionWrapper>
         </div>
       </section>
@@ -204,6 +211,10 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
           </div>
         </div>
       </section>
+
+      <div className="container-site pb-6">
+        <LastUpdated />
+      </div>
 
       <CTASection />
     </>

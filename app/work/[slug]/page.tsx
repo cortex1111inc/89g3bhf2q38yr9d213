@@ -11,6 +11,11 @@ import SectionLabel from '@/components/ui/SectionLabel'
 import Button from '@/components/ui/Button'
 import { WORK, getWork } from '@/lib/work'
 import { getService } from '@/lib/services'
+import JsonLd from '@/components/seo/JsonLd'
+import LastUpdated from '@/components/seo/LastUpdated'
+import { buildMetadata } from '@/lib/seo'
+import AnswerBox from '@/components/seo/AnswerBox'
+import { graph, webPageNode, workNode } from '@/lib/schema'
 
 type Params = { slug: string }
 
@@ -23,17 +28,13 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const item = getWork(slug)
   if (!item) return {}
 
-  return {
-    title: `${item.title} | Vanspire`,
-    description: item.summary,
-    alternates: { canonical: `/work/${item.slug}` },
-    openGraph: {
-      title: `${item.title} | Vanspire`,
-      description: item.summary,
-      url: `/work/${item.slug}`,
-      images: [{ url: '/ogimage.webp', width: 1200, height: 630, alt: item.title }],
-    },
-  }
+  return buildMetadata({
+    title: item.title,
+    description: item.summary.length > 160 ? `${item.summary.slice(0, 157).trimEnd()}...` : item.summary,
+    path: `/work/${item.slug}`,
+    image: 'file',
+    keywords: [item.category.toLowerCase(), ...item.stack.map((t) => t.toLowerCase()), 'Vanspire'],
+  })
 }
 
 export default async function WorkDetailPage({ params }: { params: Promise<Params> }) {
@@ -47,6 +48,12 @@ export default async function WorkDetailPage({ params }: { params: Promise<Param
 
   return (
     <>
+      <JsonLd
+        data={graph(
+          webPageNode({ path: `/work/${item.slug}`, name: item.title, description: item.summary }),
+          workNode(item),
+        )}
+      />
       <PageHero
         eyebrow={`${item.kind} · ${item.category}`}
         breadcrumbs={[{ name: 'Work', href: '/work' }, { name: item.title }]}
@@ -89,6 +96,23 @@ export default async function WorkDetailPage({ params }: { params: Promise<Param
                 <dd className="text-[15px] font-semibold leading-snug">{item.stack.join(' · ')}</dd>
               </div>
             </dl>
+          </MotionWrapper>
+        </div>
+      </section>
+
+      <section className="pt-6">
+        <div className="container-site">
+          <MotionWrapper>
+            <AnswerBox
+              question={`What is ${item.title.replace(/^Vanspire HMS: /, '')}?`}
+              answer={item.summary}
+              extraLabel={item.kind === 'Product' ? 'Product by Vanspire.' : 'Solution playbook.'}
+              extra={
+                item.kind === 'Product'
+                  ? 'Available as managed cloud SaaS or on-premise.'
+                  : 'Describes how Vanspire typically delivers this kind of engagement.'
+              }
+            />
           </MotionWrapper>
         </div>
       </section>
@@ -205,6 +229,10 @@ export default async function WorkDetailPage({ params }: { params: Promise<Param
           </div>
         </div>
       </section>
+
+      <div className="container-site pb-6">
+        <LastUpdated />
+      </div>
 
       <CTASection />
     </>

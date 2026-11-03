@@ -2,33 +2,45 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import MotionWrapper from '@/components/ui/MotionWrapper'
+import JsonLd from '@/components/seo/JsonLd'
+import ArticleSummary from '@/components/seo/ArticleSummary'
+import { INSIGHTS } from '@/lib/content'
+import { LAST_UPDATED } from '@/lib/site'
+import { buildMetadata } from '@/lib/seo'
+import { articleNode, breadcrumbList, graph, webPageNode } from '@/lib/schema'
 
-export const metadata: Metadata = {
-  title: 'Building Scalable Digital Systems for Long-Term Growth | Vanspire Insights',
-  description:
-    'Most enterprise software is built to ship, not to scale. This article examines the architectural decisions that determine whether a digital system grows with your business - or collapses under its own weight.',
-  keywords: [
-    'scalable software systems',
-    'enterprise digital platforms',
-    'long-term technology architecture',
-    'cloud scalability strategy',
-    'software architecture principles',
-    'enterprise software design',
-    'scalable web application architecture',
-  ],
-  openGraph: {
-    title: 'Building Scalable Digital Systems for Long-Term Growth | Vanspire',
-    description: 'Why most companies build fragile systems - and the architectural principles that separate software built to endure from software built to ship.',
-    url: '/insights/building-scalable-digital-systems',
-    images: [{ url: '/ogimage.webp', width: 1200, height: 630, alt: 'Building Scalable Digital Systems' }],
-    type: 'article',
-  },
-  alternates: { canonical: '/insights/building-scalable-digital-systems' },
-}
+const post = INSIGHTS.find((p) => p.slug === 'building-scalable-digital-systems')!
+
+export const metadata: Metadata = buildMetadata({
+  title: post.title,
+  absoluteTitle: true,
+  description: post.summary.length > 160 ? `${post.summary.slice(0, 157).trimEnd()}...` : post.summary,
+  path: post.href,
+  type: 'article',
+  publishedTime: post.datePublished,
+  modifiedTime: LAST_UPDATED,
+  keywords: post.keywords,
+  image: { url: post.image, width: 1200, height: 800, alt: post.title },
+})
 
 export default function InsightArticle1() {
   return (
     <>
+      <JsonLd
+        data={graph(
+          webPageNode({ path: post.href, name: post.title, description: post.summary, datePublished: post.datePublished }),
+          breadcrumbList([{ name: 'Insights', path: '/insights' }, { name: post.title }]),
+          articleNode({
+            path: post.href,
+            headline: post.title,
+            description: post.summary,
+            image: post.image,
+            datePublished: post.datePublished,
+            section: post.category,
+            keywords: post.keywords,
+          }),
+        )}
+      />
       {/* Hero */}
       <section className="pt-40 pb-0 md:pt-52 bg-white overflow-hidden">
         <div className="container-site pb-16">
@@ -41,7 +53,7 @@ export default function InsightArticle1() {
               <span className="text-[11px] uppercase tracking-widest text-brand-muted font-medium border border-brand-border px-3 py-1">
                 Systems Architecture
               </span>
-              <span className="text-[12px] text-brand-muted font-light">February 2026 · 7 min read</span>
+              <span className="text-[12px] text-brand-muted font-light"><time dateTime="2026-02-01">February 2026</time> · 7 min read</span>
             </div>
           </MotionWrapper>
           <MotionWrapper delay={0.1}>
@@ -73,6 +85,7 @@ export default function InsightArticle1() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
             {/* Main content */}
             <article className="lg:col-span-8 prose-vanspire">
+              <ArticleSummary summary={post.summary} takeaways={post.takeaways} />
               <MotionWrapper>
                 <div className="space-y-6 text-[16px] font-light text-brand-muted leading-[1.9]">
 

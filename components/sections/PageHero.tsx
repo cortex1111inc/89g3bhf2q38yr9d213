@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { ChevronRight } from 'lucide-react'
 import MotionWrapper from '@/components/ui/MotionWrapper'
 import SectionLabel from '@/components/ui/SectionLabel'
+import JsonLd from '@/components/seo/JsonLd'
+import { breadcrumbList } from '@/lib/schema'
 
 interface PageHeroProps {
   eyebrow: string
@@ -15,6 +17,14 @@ interface PageHeroProps {
 export default function PageHero({ eyebrow, title, description, breadcrumbs, children, aside }: PageHeroProps) {
   return (
     <section className="relative overflow-hidden pt-36 pb-14 md:pt-44 md:pb-20">
+      {breadcrumbs && (
+        <JsonLd
+          data={{
+            '@context': 'https://schema.org',
+            ...breadcrumbList(breadcrumbs.map((c) => ({ name: c.name, path: c.href }))),
+          }}
+        />
+      )}
       <div className="bg-dots-dark absolute inset-0 opacity-60 [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" aria-hidden="true" />
       <div className="container-site relative">
         {breadcrumbs && (

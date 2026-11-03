@@ -4,25 +4,28 @@ import WorkCard from '@/components/sections/WorkCard'
 import CTASection from '@/components/sections/CTASection'
 import MotionWrapper from '@/components/ui/MotionWrapper'
 import { WORK } from '@/lib/work'
+import JsonLd from '@/components/seo/JsonLd'
+import LastUpdated from '@/components/seo/LastUpdated'
+import { buildMetadata } from '@/lib/seo'
+import { graph, itemListNode, webPageNode } from '@/lib/schema'
 
-export const metadata: Metadata = {
-  title: 'Our Work | Products & Solutions by Vanspire',
-  description:
-    'Explore Vanspire\'s hospital management platform and the software, AI, mobile, integration, ERP and marketing solutions we deliver for growing businesses.',
-  alternates: { canonical: '/work' },
-  openGraph: {
-    title: 'Our Work | Vanspire',
-    description: 'Products we run and solutions we deliver across software, AI, mobile, integration and marketing.',
-    url: '/work',
-    images: [{ url: '/ogimage.webp', width: 1200, height: 630, alt: 'Vanspire work' }],
-  },
-}
+const TITLE = 'Our Work: Products & Solutions'
+const DESCRIPTION =
+  "Vanspire's hospital management platform and the ERP, integration, mobile, AI and marketing solutions we deliver for growing businesses."
+
+export const metadata: Metadata = buildMetadata({ title: TITLE, description: DESCRIPTION, path: '/work' })
 
 export default function WorkPage() {
   const [flagship, ...rest] = WORK
 
   return (
     <>
+      <JsonLd
+        data={graph(
+          webPageNode({ path: '/work', name: TITLE, description: DESCRIPTION, type: 'CollectionPage' }),
+          itemListNode('Vanspire work and solutions', WORK.map((w) => ({ name: w.title, path: `/work/${w.slug}` }))),
+        )}
+      />
       <PageHero
         eyebrow="Our work"
         breadcrumbs={[{ name: 'Work' }]}

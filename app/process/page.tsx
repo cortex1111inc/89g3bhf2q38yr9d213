@@ -9,19 +9,16 @@ import SectionLabel from '@/components/ui/SectionLabel'
 import Button from '@/components/ui/Button'
 import { LIFECYCLE } from '@/lib/services'
 import { GENERAL_FAQS } from '@/lib/content'
+import JsonLd from '@/components/seo/JsonLd'
+import LastUpdated from '@/components/seo/LastUpdated'
+import { buildMetadata } from '@/lib/seo'
+import { graph, howToNode, webPageNode } from '@/lib/schema'
 
-export const metadata: Metadata = {
-  title: 'Our Process | How Vanspire Takes Projects from Idea to Growth',
-  description:
-    'Discover, design, build, launch, grow. See how Vanspire runs software, AI, mobile, web and IT projects with short iterations, regular demos and clear communication.',
-  alternates: { canonical: '/process' },
-  openGraph: {
-    title: 'Our Process | Vanspire',
-    description: 'A five-stage path from idea to growth, run with short iterations and regular demos.',
-    url: '/process',
-    images: [{ url: '/ogimage.webp', width: 1200, height: 630, alt: 'Vanspire process' }],
-  },
-}
+const TITLE = 'Our Process: From Idea to Growth'
+const DESCRIPTION =
+  'Discover, design, build, launch, grow. How Vanspire runs software, AI, mobile, web and IT projects with short iterations, regular demos and clear communication.'
+
+export const metadata: Metadata = buildMetadata({ title: TITLE, description: DESCRIPTION, path: '/process' })
 
 const STAGE_DETAILS: Record<string, { outputs: string[] }> = {
   Discover: { outputs: ['Stakeholder and user interviews', 'Goals, constraints and success measures', 'Risk list and recommended first phase'] },
@@ -41,6 +38,7 @@ const COMMUNICATION = [
 export default function ProcessPage() {
   return (
     <>
+      <JsonLd data={graph(webPageNode({ path: '/process', name: TITLE, description: DESCRIPTION }), howToNode())} />
       <PageHero
         eyebrow="How we work"
         breadcrumbs={[{ name: 'Process' }]}
@@ -58,7 +56,7 @@ export default function ProcessPage() {
         <div className="container-site space-y-4">
           {LIFECYCLE.map((stage, i) => (
             <MotionWrapper key={stage.step}>
-              <div className="grid gap-8 rounded-5xl bg-white p-7 md:p-10 lg:grid-cols-12 lg:gap-12">
+              <div id={stage.title.toLowerCase()} className="scroll-mt-32 grid gap-8 rounded-5xl bg-white p-7 md:p-10 lg:grid-cols-12 lg:gap-12">
                 <div className="flex items-start gap-6 lg:col-span-5">
                   <span className="font-impact text-6xl leading-none text-accent md:text-7xl">{stage.step}</span>
                   <div>

@@ -12,6 +12,10 @@ export interface Service {
   slug: string
   name: string
   short: string // card title-length label
+  /** Answer-first definition (what it is + what Vanspire does). Quoted by search and AI answers. */
+  definition: string
+  /** Who the service is for, one sentence. */
+  whoFor: string
   tagline: string
   summary: string // one-sentence card copy
   intro: string[] // detail page overview paragraphs
@@ -30,6 +34,9 @@ export interface Service {
 export const SERVICES: Service[] = [
   {
     slug: 'custom-software-development',
+    definition:
+      "Custom software development is the process of designing, building and maintaining software made specifically for one organisation's workflows, rather than buying a generic off-the-shelf product. Vanspire builds SaaS platforms, internal tools, enterprise systems and IoT platforms for businesses in India and worldwide.",
+    whoFor: 'Businesses outgrowing spreadsheets and generic tools, startups building a first product, and organisations modernising legacy systems.',
     name: 'Custom Software Development',
     short: 'Custom Software',
     tagline: 'Software shaped around how your business actually works.',
@@ -71,6 +78,9 @@ export const SERVICES: Service[] = [
   },
   {
     slug: 'ai-automation',
+    definition:
+      "AI and automation services use language models, machine learning and workflow tools to handle repetitive business tasks such as answering questions, processing documents and routing approvals. Vanspire builds AI assistants, chatbots, document intelligence and workflow automation grounded in a client's own data, with human review where stakes are high.",
+    whoFor: 'Teams buried in repetitive, high-volume tasks, and companies that want a support or knowledge assistant built on their own documents.',
     name: 'AI & Automation',
     short: 'AI & Automation',
     tagline: 'Put AI to work on the tasks that slow your team down.',
@@ -112,6 +122,9 @@ export const SERVICES: Service[] = [
   },
   {
     slug: 'mobile-app-development',
+    definition:
+      'Mobile app development is the design and engineering of iOS and Android applications, built natively or with cross-platform frameworks such as React Native and Flutter. Vanspire delivers apps end to end, including the backend, admin dashboard, store launch and ongoing support.',
+    whoFor: 'Startups launching an app, businesses digitising field or customer workflows, and teams that need an existing app extended or rebuilt.',
     name: 'Mobile App Development',
     short: 'Mobile Apps',
     tagline: 'iOS and Android apps people keep on their home screen.',
@@ -153,6 +166,9 @@ export const SERVICES: Service[] = [
   },
   {
     slug: 'web-development',
+    definition:
+      'Web platform development covers websites, e-commerce stores, portals and web applications built to load fast, rank in search and convert visitors. Vanspire builds with Next.js and React, with SEO, performance and content management built in from the start.',
+    whoFor: 'Businesses that need a new or faster website, an online store, or a customer portal that does real work.',
     name: 'Web Platform Development',
     short: 'Web Platforms',
     tagline: 'Fast, search-friendly websites and web apps that convert.',
@@ -194,6 +210,9 @@ export const SERVICES: Service[] = [
   },
   {
     slug: 'product-design-ux',
+    definition:
+      "Product strategy and UX design is the discovery, user research, interface design and prototyping done before engineering, so a product's scope and usability are validated early. Vanspire runs discovery workshops, UX research, UI design, design systems and MVP scoping.",
+    whoFor: 'Founders with an idea that needs shaping, and teams whose existing product is confusing users or slowing delivery.',
     name: 'Product Strategy & UX Design',
     short: 'Product & UX',
     tagline: 'From rough idea to a product people understand at a glance.',
@@ -235,6 +254,9 @@ export const SERVICES: Service[] = [
   },
   {
     slug: 'cloud-devops',
+    definition:
+      'Cloud and DevOps services design, migrate and operate infrastructure on platforms such as AWS, Azure and Google Cloud, and automate testing and deployment through CI/CD pipelines. Vanspire provides cloud architecture, migration, monitoring, security hardening and managed infrastructure.',
+    whoFor: 'Companies moving off on-premise servers, teams with slow or risky releases, and anyone whose cloud bill or reliability is getting out of hand.',
     name: 'Cloud & DevOps',
     short: 'Cloud & DevOps',
     tagline: 'Infrastructure that scales quietly and costs what it should.',
@@ -276,6 +298,9 @@ export const SERVICES: Service[] = [
   },
   {
     slug: 'it-consulting',
+    definition:
+      'IT consulting helps organisations choose, plan and implement technology: digital transformation roadmaps, ERP rollouts, system integration and technology audits. Vanspire delivers ERP implementation (SAP, Oracle, Microsoft Dynamics 365, Odoo, ERPNext), enterprise integration and fractional CTO advisory.',
+    whoFor: 'Leadership teams planning a modernisation, organisations replacing or rolling out an ERP, and businesses whose systems do not talk to each other.',
     name: 'IT Consulting & Implementation',
     short: 'IT Consulting',
     tagline: 'Technology strategy and delivery you can hold us to.',
@@ -317,6 +342,9 @@ export const SERVICES: Service[] = [
   },
   {
     slug: 'digital-marketing',
+    definition:
+      'Digital marketing is the use of search, paid media, social, content and analytics to attract and convert customers online. Vanspire runs SEO, Google and Meta advertising, social media, content and conversion optimisation, with tracking tied to leads and sales.',
+    whoFor: 'Businesses that want more qualified enquiries, and product teams who need launch and growth marketing from the people who built the product.',
     name: 'Digital Marketing',
     short: 'Digital Marketing',
     tagline: 'Marketing that connects the product you built to the people who need it.',

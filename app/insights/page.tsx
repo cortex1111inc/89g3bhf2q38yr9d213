@@ -6,30 +6,44 @@ import PageHero from '@/components/sections/PageHero'
 import CTASection from '@/components/sections/CTASection'
 import MotionWrapper from '@/components/ui/MotionWrapper'
 import { INSIGHTS } from '@/lib/content'
+import JsonLd from '@/components/seo/JsonLd'
+import { buildMetadata } from '@/lib/seo'
+import { absoluteUrl, IDS } from '@/lib/site'
+import { graph, webPageNode } from '@/lib/schema'
 
-export const metadata: Metadata = {
-  title: 'Insights | Software, Cloud & Digital Strategy from Vanspire',
-  description:
-    'Practical articles on software architecture, digital transformation, cloud, AI and growth from the Vanspire team. Written for leaders who build for the long term.',
-  keywords: [
-    'software architecture insights',
-    'digital transformation articles',
-    'cloud architecture blog',
-    'technology strategy',
-    'Vanspire insights',
-  ],
-  openGraph: {
-    title: 'Vanspire Insights | Software, Cloud & Digital Strategy',
-    description: 'Perspectives on software, systems thinking and digital transformation from the Vanspire team.',
-    url: '/insights',
-    images: [{ url: '/ogimage.webp', width: 1200, height: 630, alt: 'Vanspire Insights' }],
-  },
-  alternates: { canonical: '/insights' },
-}
+const TITLE = 'Insights: Software, Cloud & Digital Strategy'
+const DESCRIPTION =
+  'Practical articles on software architecture, digital transformation, cloud, AI and growth from the Vanspire team, written for leaders who build for the long term.'
+
+export const metadata: Metadata = buildMetadata({
+  title: TITLE,
+  description: DESCRIPTION,
+  path: '/insights',
+  keywords: ['software architecture insights', 'digital transformation articles', 'technology strategy', 'Vanspire insights'],
+})
 
 export default function InsightsPage() {
   return (
     <>
+      <JsonLd
+        data={graph(
+          webPageNode({ path: '/insights', name: TITLE, description: DESCRIPTION, type: 'CollectionPage' }),
+          {
+            '@type': 'Blog',
+            '@id': `${absoluteUrl('/insights')}#blog`,
+            name: 'Vanspire Insights',
+            url: absoluteUrl('/insights'),
+            publisher: { '@id': IDS.organization },
+            blogPost: INSIGHTS.map((post) => ({
+              '@type': 'BlogPosting',
+              headline: post.title,
+              url: absoluteUrl(post.href),
+              datePublished: post.datePublished,
+              description: post.excerpt,
+            })),
+          },
+        )}
+      />
       <PageHero
         eyebrow="Insights"
         breadcrumbs={[{ name: 'Insights' }]}

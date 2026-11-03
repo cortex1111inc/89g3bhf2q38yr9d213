@@ -7,19 +7,14 @@ import MotionWrapper from '@/components/ui/MotionWrapper'
 import SectionLabel from '@/components/ui/SectionLabel'
 import Button from '@/components/ui/Button'
 import { SITE } from '@/lib/site'
+import { buildMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
-  title: 'Careers | Work with Vanspire',
+export const metadata: Metadata = buildMetadata({
+  title: 'Careers: Join the Vanspire Team',
   description:
     'Join Vanspire, a founder-led product and IT firm in Kerala. We are always interested in talented engineers, designers, marketers and consultants.',
-  alternates: { canonical: '/careers' },
-  openGraph: {
-    title: 'Careers | Vanspire',
-    description: 'Small senior team, real ownership, work that ships. Introduce yourself.',
-    url: '/careers',
-    images: [{ url: '/ogimage.webp', width: 1200, height: 630, alt: 'Careers at Vanspire' }],
-  },
-}
+  path: '/careers',
+})
 
 const PERKS = [
   { icon: Rocket, title: 'Real ownership', description: 'Own features and clients end to end instead of being one cog in a large machine.' },

@@ -9,6 +9,8 @@ export interface LandingPageData {
   metaTitle: string
   metaDescription: string
   eyebrow: string
+  /** Natural-language question this page answers (answer-engine phrasing). */
+  question: string
   h1: string
   sub: string
   image: string
@@ -19,6 +21,8 @@ export interface LandingPageData {
   why: { title: string; description: string }[]
   areasTitle: string
   areas: string[]
+  /** Geographic scope for structured data. */
+  areaServed: { type: 'City' | 'AdministrativeArea' | 'Country'; name: string }[]
   faqs: { question: string; answer: string }[]
   ctaTitle: string
 }
@@ -26,10 +30,12 @@ export interface LandingPageData {
 export const LANDING_PAGES: LandingPageData[] = [
   {
     slug: 'best-website-development-company-in-kochi',
+    areaServed: [{ type: 'City', name: 'Kochi' }, { type: 'AdministrativeArea', name: 'Kerala' }],
     metaTitle: 'Best Website Development Company in Kochi | Vanspire Innovations',
     metaDescription:
       'Looking for the best website development company in Kochi? Vanspire delivers premium, scalable web solutions, enterprise software, and robust cloud infrastructure.',
     eyebrow: 'Website development · Kochi',
+    question: 'Which company develops websites and web apps in Kochi?',
     h1: 'Best Website Development Company in Kochi',
     sub: 'Fast, search-friendly websites, e-commerce stores and web applications for Kochi and Kerala businesses, built by the same team that handles your software, cloud and marketing.',
     image: 'cowork-2',
@@ -55,10 +61,12 @@ export const LANDING_PAGES: LandingPageData[] = [
   },
   {
     slug: 'best-digital-marketing-company-in-kerala',
+    areaServed: [{ type: 'AdministrativeArea', name: 'Kerala' }, { type: 'City', name: 'Kochi' }, { type: 'City', name: 'Thiruvananthapuram' }, { type: 'City', name: 'Kozhikode' }],
     metaTitle: 'Top Digital Marketing Agency in Kerala | Vanspire',
     metaDescription:
-      'Looking for the best digital marketing company in Kerala? Vanspire delivers premium SEO, performance ads, and social media marketing across Kochi, Trivandrum, and Calicut.',
+      'Looking for the best digital marketing company in Kerala? Vanspire delivers SEO, performance ads and social media marketing across Kochi, Trivandrum and Calicut.',
     eyebrow: 'Digital marketing · Kerala',
+    question: 'Which agency provides digital marketing in Kerala?',
     h1: 'Best Digital Marketing Company in Kerala',
     sub: 'Data-driven SEO, performance marketing and social media for Kerala businesses, planned and measured together with the website and product they support.',
     image: 'mkt-voice',
@@ -84,10 +92,12 @@ export const LANDING_PAGES: LandingPageData[] = [
   },
   {
     slug: 'best-mobile-app-development-company-in-india',
+    areaServed: [{ type: 'Country', name: 'India' }],
     metaTitle: 'Best Mobile App Development Company in India | Enterprise SaaS',
     metaDescription:
       'Vanspire is the best mobile app development company in India specializing in scalable iOS/Android apps, enterprise security, and cloud architectures.',
     eyebrow: 'Mobile app development · India',
+    question: 'Which company develops mobile apps in India?',
     h1: 'Best Mobile App Development Company in India',
     sub: 'iOS and Android apps with the backend, cloud and design they need, from MVP to store launch to ongoing growth, built by one accountable team.',
     image: 'app-phones',
@@ -113,10 +123,12 @@ export const LANDING_PAGES: LandingPageData[] = [
   },
   {
     slug: 'iot-and-software-solutions',
+    areaServed: [{ type: 'Country', name: 'India' }, { type: 'AdministrativeArea', name: 'Kerala' }],
     metaTitle: 'Top IoT and Software Solutions Company | Vanspire Innovations',
     metaDescription:
-      'Vanspire provides industry-leading IoT solutions, enterprise software, and scalable technology infrastructure designed for long-term growth and digital transformation.',
+      'Vanspire provides IoT solutions, enterprise software and scalable technology infrastructure designed for long-term growth and digital transformation.',
     eyebrow: 'IoT & software solutions',
+    question: 'Who provides IoT and enterprise software solutions?',
     h1: 'IoT and Software Solutions That Connect Your Operations',
     sub: 'Device data pipelines, real-time dashboards and enterprise software that turn sensors and machines into decisions, on cloud infrastructure built to scale.',
     image: 'datacenter',

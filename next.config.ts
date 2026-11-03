@@ -19,8 +19,17 @@ const legacyRedirects: [string, string][] = [
   ['/services/integration/enterprise-system-integration', '/work/enterprise-integration-hub'],
 ]
 
+const securityHeaders = [
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()' },
+]
+
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
   images: {
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -30,6 +39,16 @@ const nextConfig: NextConfig = {
   },
   // Strict mode for catching subtle bugs
   reactStrictMode: true,
+  async headers() {
+    return [
+      { source: '/:path*', headers: securityHeaders },
+      // Template images are content-addressed by filename; cache them for a year.
+      {
+        source: '/img/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+      },
+    ]
+  },
   async redirects() {
     return legacyRedirects.map(([source, destination]) => ({
       source,
