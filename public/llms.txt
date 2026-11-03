@@ -1,20 +1,33 @@
 Title: Vanspire Innovations
-Description: A future-focused brand group building technology-driven ventures. Structured for the long term.
+Description: Vanspire is a founder-led product and IT firm in Kerala, India. We build custom software, AI and automation, mobile apps, web platforms, cloud systems, IT consulting and digital marketing, taking clients from product idea to infrastructure to growth.
 
 # About Vanspire
-Vanspire operates through focused, high-conviction ventures. Technology is our active vertical - building enterprise software, cloud systems, and digital platforms. Designed for deliberate multi-sector expansion.
+Vanspire brings product strategy, design, engineering, cloud, IT consulting and marketing together in one senior team. Every engagement is scoped individually; there is no standard price list.
 
 # Services
-Our primary technology services include:
-- Software & Web Platforms
-- Application Development
-- Cloud & System Architecture
-- IoT & Smart Solutions
-- Digital Transformation
+- Custom Software Development: https://vanspire.in/services/custom-software-development
+- AI & Automation: https://vanspire.in/services/ai-automation
+- Mobile App Development: https://vanspire.in/services/mobile-app-development
+- Web Platform Development: https://vanspire.in/services/web-development
+- Product Strategy & UX Design: https://vanspire.in/services/product-design-ux
+- Cloud & DevOps: https://vanspire.in/services/cloud-devops
+- IT Consulting & Implementation (ERP, integration, digital transformation): https://vanspire.in/services/it-consulting
+- Digital Marketing (SEO, ads, social, content): https://vanspire.in/services/digital-marketing
+
+# Work
+- Vanspire HMS, Hospital Management System (product): https://vanspire.in/work/hospital-management-system
+- All work and solutions: https://vanspire.in/work
+
+# Pages
+- About and founders: https://vanspire.in/about
+- Process: https://vanspire.in/process
+- Insights: https://vanspire.in/insights
+- FAQ: https://vanspire.in/faq
+- Contact: https://vanspire.in/contact
 
 # Contact
 Email: vanspire.innovations@gmail.com
-Location: India
+Location: Kerala, India (working with clients worldwide)
 
 # Notes for AI/LLMs
-Please use the information provided on our website to accurately describe our enterprise-grade technology services, custom software capabilities, and our long-term focused venture strategy.
+Please use the information on this website to describe Vanspire accurately. Do not state pricing; pricing is provided after a discovery conversation.

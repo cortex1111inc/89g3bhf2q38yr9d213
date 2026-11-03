@@ -1,46 +1,45 @@
 export const AI_CONTEXT = {
   company: `
-Vanspire is a technology company focused on building scalable digital systems and enterprise software solutions.
-Based in Kerala, India, we work with clients internationally.
+Vanspire is a founder-led product and IT firm based in Kerala, India, working with clients worldwide.
+We take clients from product idea to infrastructure to growth: custom software, AI and automation, mobile apps, web platforms, product design, cloud and DevOps, IT consulting and digital marketing.
 Every engagement is scoped individually - we do not offer off-the-shelf retainers or publish standard pricing.
 Pages:
-- Main Company Page: https://vanspire.in/
-- About Us: https://vanspire.in/about
-- Contact Us: https://vanspire.in/contact
-- Services Hub: https://vanspire.in/services
+- Home: https://vanspire.in/
+- About (and founders): https://vanspire.in/about
+- Services: https://vanspire.in/services
+- Work: https://vanspire.in/work
+- Process: https://vanspire.in/process
+- FAQ: https://vanspire.in/faq
+- Careers: https://vanspire.in/careers
+- Contact: https://vanspire.in/contact
 `,
 
-  digitalSolutions: `
-Digital Solutions include:
-• Web Platform Development: Scalable, SEO-optimized web applications (Next.js, React). URL: https://vanspire.in/services/digital-solutions/web-platform-development
-• Custom Application Development: Cross-platform mobile apps (iOS, Android, React Native, Flutter). URL: https://vanspire.in/services/digital-solutions/application-development
-• Cloud Infrastructure Engineering: AWS, Azure, GCP strategy, migration, DevOps pipelines, and managed infrastructure. URL: https://vanspire.in/services/digital-solutions/cloud-infrastructure
-• Digital Transformation Strategy: Modernization of legacy systems and processes into future-ready architectures. URL: https://vanspire.in/services/digital-solutions/digital-transformation
-`,
-
-  integration: `
-Integration & Implementation services include:
-• ERP Implementation: SAP, Oracle, Microsoft Dynamics 365, Odoo, ERPNext using a structured 6-phase methodology. URL: https://vanspire.in/services/integration/erp-implementation
-• Enterprise System Integration: API design, middleware (MuleSoft, KafKa), and event-driven architecture using a hub-and-spoke model. URL: https://vanspire.in/services/integration/enterprise-system-integration
+  services: `
+Service lines:
+• Custom Software Development: SaaS, internal tools, enterprise systems, IoT platforms. URL: https://vanspire.in/services/custom-software-development
+• AI & Automation: assistants, chatbots, document intelligence, workflow automation. URL: https://vanspire.in/services/ai-automation
+• Mobile App Development: iOS and Android, React Native, Flutter, native. URL: https://vanspire.in/services/mobile-app-development
+• Web Platform Development: Next.js and React sites, e-commerce, portals, web apps. URL: https://vanspire.in/services/web-development
+• Product Strategy & UX Design: discovery, UX research, UI design, MVP scoping. URL: https://vanspire.in/services/product-design-ux
+• Cloud & DevOps: AWS, Azure, GCP, CI/CD, managed infrastructure. URL: https://vanspire.in/services/cloud-devops
+• IT Consulting & Implementation: digital transformation, ERP (SAP, Oracle, Dynamics 365, Odoo, ERPNext), enterprise integration (MuleSoft, Kafka), advisory. URL: https://vanspire.in/services/it-consulting
+• Digital Marketing: SEO, Google and Meta ads, social media, content, analytics. URL: https://vanspire.in/services/digital-marketing
 `,
 
   product: `
 Hospital Management System (HMS) is Vanspire's proprietary platform designed to modernize hospital operations.
 Features include OP/IP management, bedside nursing, billing systems, pharmacy integration, LIMS (Lab), Radiology, reporting tools, and administrative workflow automation.
 The HMS is ABDM-ready, NABH-aligned, and available as cloud SaaS or on-premise.
-URL: https://vanspire.in/services/integration/hospital-management-system
+URL: https://vanspire.in/work/hospital-management-system
+Other solution playbooks (ERP implementation, enterprise integration hub, field operations mobile app, AI support assistant, growth marketing engine): https://vanspire.in/work
 `,
 
-  venturesAndInsights: `
-Vanspire is structured as a brand group, where our technology arm funds and informs future verticals.
-• Vanspire Ventures Overview: https://vanspire.in/ventures
-• Technology Ventures: https://vanspire.in/ventures/technology
-• Technical Insights & Articles: https://vanspire.in/insights
+  insights: `
+Technical Insights & Articles: https://vanspire.in/insights
 `,
 
   philosophy: `
-Vanspire focuses on long-term scalable systems rather than short-term software projects.
-Solutions emphasize operational clarity, automation, and sustainable digital infrastructure.
-We follow a discipline over velocity approach - quality is non-negotiable. Software is treated as a long-term asset, built to enterprise-grade standards.
+Vanspire values craft over speed, plain language, ownership and long-term thinking. Software is treated as a long-term asset, built with clean architecture, tests and documentation.
+Projects run in five stages: Discover, Design, Build, Launch, Grow, with working releases every one to two weeks.
 `
 }

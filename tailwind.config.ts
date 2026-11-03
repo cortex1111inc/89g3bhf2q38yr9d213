@@ -9,19 +9,28 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
-        display: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        impact: ['var(--font-impact)', 'Impact', 'sans-serif'],
       },
       colors: {
-        // Vanspire design tokens - Black on White
+        // Vanspire design tokens (rebrand): ink on soft canvas with a coral accent.
+        // `brand.*` is kept so legacy pages (insights articles, legal) keep working.
+        ink: '#101010',
+        canvas: '#f1f2f4',
+        accent: {
+          DEFAULT: '#f14f44',
+          dark: '#d93d32',
+          soft: '#fde8e6',
+        },
         brand: {
-          black: '#0a0a0a',
+          black: '#101010',
           white: '#ffffff',
-          offwhite: '#f7f7f5',
-          muted: '#6b6b6b',
-          border: '#e5e5e5',
+          offwhite: '#f1f2f4',
+          muted: '#555555',
+          border: '#dfe0e4',
           'border-dark': '#2a2a2a',
-          accent: '#0a0a0a',
+          accent: '#f14f44',
         },
       },
       spacing: {
@@ -39,20 +48,22 @@ const config: Config = {
         '8xl': '88rem',
         '9xl': '96rem',
       },
+      borderRadius: {
+        '4xl': '2rem',
+        '5xl': '2.5rem',
+      },
       letterSpacing: {
         tightest: '-0.04em',
         tighter: '-0.02em',
         widest: '0.25em',
       },
-      lineHeight: {
-        '11': '2.75rem',
-        '12': '3rem',
-        '13': '3.25rem',
-        '14': '3.5rem',
-      },
       animation: {
         'fade-up': 'fadeUp 0.6s ease-out both',
         'fade-in': 'fadeIn 0.4s ease-out both',
+        marquee: 'marquee 38s linear infinite',
+        'marquee-reverse': 'marquee 38s linear infinite reverse',
+        'spin-slow': 'spin 18s linear infinite',
+        float: 'float 6s ease-in-out infinite',
       },
       keyframes: {
         fadeUp: {
@@ -62,6 +73,14 @@ const config: Config = {
         fadeIn: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
+        },
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
         },
       },
     },

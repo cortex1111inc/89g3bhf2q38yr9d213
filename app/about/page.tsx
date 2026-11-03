@@ -1,26 +1,30 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import Link from 'next/link'
+import { Linkedin, Eye, Target, Compass } from 'lucide-react'
+import PageHero from '@/components/sections/PageHero'
+import CTASection from '@/components/sections/CTASection'
+import Lifecycle from '@/components/sections/Lifecycle'
 import MotionWrapper from '@/components/ui/MotionWrapper'
 import SectionLabel from '@/components/ui/SectionLabel'
-import CTASection from '@/components/sections/CTASection'
+import Button from '@/components/ui/Button'
+import { VALUES } from '@/lib/content'
+import { SITE_URL } from '@/lib/site'
 
 export const metadata: Metadata = {
-  title: 'About Vanspire | Vision, Philosophy & The Team Behind the Brand',
+  title: 'About Vanspire | A Founder-Led Product & IT Firm',
   description:
-    'Vanspire is a future-focused brand group built to last. Learn about our founding vision, long-term philosophy, structured growth model, and the team driving Vanspire forward.',
+    'Vanspire is a founder-led product and IT firm in Kerala, India. Meet the team behind our software, AI, mobile, web, cloud and marketing work, and the principles we build by.',
   keywords: [
     'about Vanspire',
-    'brand group vision',
-    'future-focused technology company India',
-    'enterprise brand philosophy',
-    'technology venture founders',
-    'long-term business strategy',
+    'software company Kerala',
+    'founder-led IT firm India',
+    'product and IT consulting firm',
+    'Vanspire team',
   ],
   openGraph: {
-    title: 'About Vanspire | Vision, Philosophy & Team',
+    title: 'About Vanspire | A Founder-Led Product & IT Firm',
     description:
-      'A future-focused brand group built with discipline, vision, and long-term intent. Meet the people and philosophy behind Vanspire.',
+      'A small, senior, founder-led firm that takes products from idea to infrastructure to growth. Meet the people behind Vanspire.',
     url: '/about',
     images: [{ url: '/ogimage.webp', width: 1200, height: 630, alt: 'About Vanspire' }],
   },
@@ -39,14 +43,14 @@ const team = [
     name: 'Vyshnav M',
     role: 'Growth & Markets',
     linkedin: 'https://www.linkedin.com/in/vyshnavmancheri/',
-    bio: 'Drives digital growth, market visibility, and strategic positioning across Vanspire initiatives.',
+    bio: 'Drives digital growth, market visibility, and strategic positioning across Vanspire projects.',
     image: '/vyshnav.webp',
   },
   {
     name: 'Sreehari S',
     role: 'Systems & Infra',
     linkedin: 'https://www.linkedin.com/in/sreehari-s-5a2a592b9/',
-    bio: 'Focusing on building scalable systems and core technological foundations for Vanspire ventures.',
+    bio: 'Focusing on building scalable systems and core technological foundations for Vanspire clients.',
     image: '/sreehari.webp',
   },
   {
@@ -58,125 +62,157 @@ const team = [
   },
 ]
 
-const growthStages = [
-  { step: '01', title: 'Define the Thesis', desc: 'Every venture begins with a documented thesis - a clear articulation of the problem, the market, and the structural edge Vanspire brings.' },
-  { step: '02', title: 'Build with Depth', desc: 'We develop full operational capability before launching. No half-built products. No premature scaling.' },
-  { step: '03', title: 'Establish, Then Expand', desc: 'Once a venture reaches operational stability, group resources become available to seed the next. Each success funds the next beginning.' },
+const pillars = [
+  {
+    icon: Target,
+    title: 'Our mission',
+    body: 'To give growing businesses a single, dependable team for everything between a product idea and a product that earns: strategy, design, engineering, infrastructure and marketing.',
+  },
+  {
+    icon: Eye,
+    title: 'Our vision',
+    body: 'To be the most trusted product and IT partner for ambitious businesses in India and beyond, known for software that lasts and relationships that outlast the project.',
+  },
+  {
+    icon: Compass,
+    title: 'Our approach',
+    body: 'Small senior teams, plain language, short feedback loops and honest estimates. We would rather say no than overpromise.',
+  },
 ]
 
 export default function AboutPage() {
   const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "AboutPage",
-    "name": "About Vanspire | Vision, Philosophy & The Team Behind the Brand",
-    "description": "Vanspire is a future-focused brand group built to last. Learn about our founding vision, long-term philosophy, structured growth model, and the team driving Vanspire forward.",
-    "url": "https://vanspire.in/about",
-    "mainEntity": {
-      "@type": "Organization",
-      "name": "Vanspire Innovations",
-      "founder": team.map(t => ({
-        "@type": "Person",
-        "name": t.name,
-        "jobTitle": t.role
-      }))
-    }
-  };
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: 'About Vanspire | A Founder-Led Product & IT Firm',
+    description:
+      'Vanspire is a founder-led product and IT firm in Kerala, India building software, AI, mobile, web, cloud and marketing.',
+    url: `${SITE_URL}/about`,
+    mainEntity: {
+      '@type': 'Organization',
+      name: 'Vanspire Innovations',
+      founder: team.map((t) => ({
+        '@type': 'Person',
+        name: t.name,
+        jobTitle: t.role,
+        sameAs: t.linkedin,
+      })),
+    },
+  }
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
+      <PageHero
+        eyebrow="About us"
+        breadcrumbs={[{ name: 'About' }]}
+        title={
+          <>
+            A small firm with the range of a <span className="text-accent">full agency</span>.
+          </>
+        }
+        description="Vanspire brings product thinking, engineering, cloud, AI and marketing together in one founder-led team, so your project has one group answering for it end to end."
       />
-      {/* Hero */}
-      <section className="pt-40 pb-24 md:pt-52 md:pb-32 bg-white">
+
+      <section className="pb-10">
         <div className="container-site">
-          <MotionWrapper>
-            <SectionLabel>Who We Are</SectionLabel>
+          <div className="grid gap-4 md:grid-cols-12">
+            <MotionWrapper className="md:col-span-8">
+              <div className="relative aspect-[16/10] overflow-hidden rounded-5xl">
+                <Image src="/img/cowork.webp" alt="The Vanspire team working together" fill priority sizes="(min-width: 768px) 65vw, 100vw" className="object-cover" />
+              </div>
+            </MotionWrapper>
+            <MotionWrapper delay={0.1} className="md:col-span-4">
+              <div className="relative h-full min-h-[260px] overflow-hidden rounded-5xl">
+                <Image src="/img/cowork-3.webp" alt="Colleagues collaborating over a laptop" fill sizes="(min-width: 768px) 30vw, 100vw" className="object-cover" />
+              </div>
+            </MotionWrapper>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-pad">
+        <div className="container-site grid gap-12 lg:grid-cols-12 lg:gap-16">
+          <MotionWrapper className="lg:col-span-5">
+            <SectionLabel>Our story</SectionLabel>
+            <h2 className="text-display-md">From a group of freelancers to a firm.</h2>
           </MotionWrapper>
-          <MotionWrapper delay={0.1}>
-            <h1 className="text-[clamp(2.5rem,6vw,5.5rem)] font-light tracking-[-0.04em] text-brand-black leading-[1.02] mt-4 mb-8 max-w-4xl">
-              We built Vanspire<br />
-              <em className="not-italic text-brand-muted">to last.</em>
-            </h1>
-          </MotionWrapper>
-          <MotionWrapper delay={0.2}>
-            <p className="text-[17px] font-light text-brand-muted max-w-2xl leading-[1.85]">
-              Most companies are built to exit. Vanspire is built to endure. From the very
-              first line of code written under this group, every decision has been made
-              with permanence in mind - not short-term optics.
+          <MotionWrapper delay={0.1} className="space-y-6 text-body text-ink/65 lg:col-span-7">
+            <p>
+              Vanspire began in 2024 as a group of friends taking on software, web and digital projects together. We
+              quickly learned that clients did not want four freelancers and a project manager; they wanted one team
+              that cared about the outcome.
+            </p>
+            <p>
+              Since then each of us has worked inside different teams and companies, building products, running
+              infrastructure and growing businesses. We have brought that experience back into Vanspire and rebuilt
+              it as a proper firm: more structure, a wider range of skills and the same founder-level ownership.
+            </p>
+            <p>
+              Today we take on custom software, AI and automation, mobile and web products, cloud and IT consulting,
+              and the digital marketing that helps products find their market. We stay deliberately small so the
+              people you meet in the first call are the people doing the work.
             </p>
           </MotionWrapper>
         </div>
       </section>
 
-      <div className="divider" />
-
-      {/* Vision Statement */}
-      <section className="section-pad bg-white">
-        <div className="container-site">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
-            <MotionWrapper className="lg:col-span-4">
-              <SectionLabel>Vision</SectionLabel>
-              <h2 className="text-2xl md:text-3xl font-light tracking-tight text-brand-black mt-4">
-                Where we are headed
-              </h2>
+      <section className="pb-20 md:pb-28">
+        <div className="container-site grid gap-4 md:grid-cols-3">
+          {pillars.map((pillar, i) => (
+            <MotionWrapper key={pillar.title} delay={i * 0.08}>
+              <div className="h-full rounded-4xl bg-white p-8 md:p-10">
+                <span className="mb-10 flex h-14 w-14 items-center justify-center rounded-2xl bg-ink text-white">
+                  <pillar.icon size={24} strokeWidth={1.6} aria-hidden="true" />
+                </span>
+                <h3 className="mb-3 text-2xl font-semibold tracking-tight">{pillar.title}</h3>
+                <p className="text-[15px] leading-relaxed text-ink/60">{pillar.body}</p>
+              </div>
             </MotionWrapper>
-
-            <MotionWrapper delay={0.15} className="lg:col-span-8">
-              <blockquote className="text-[clamp(1.4rem,2.5vw,2.2rem)] font-light text-brand-black leading-snug tracking-tight border-l-2 border-brand-black pl-8 mb-8">
-                &ldquo;To become a multi-vertical brand group known for building
-                technology-driven enterprises that stand the test of time.&rdquo;
-              </blockquote>
-              <p className="text-[16px] font-light text-brand-muted leading-[1.85] mb-5">
-                Vanspire was founded on a single core thesis: the fundamental infrastructure of every major global business is increasingly digital. Organizations that intimately own and scale their digital infrastructure - rather than merely renting off-the-shelf software - will aggressively outperform their competitors and define the next era of their respective industries.
-              </p>
-              <p className="text-[16px] font-light text-brand-muted leading-[1.85] mb-5">
-                We launched our technology venture first because it serves as the ultimate leverage point. By dominating software solutions, enterprise web development, and digital marketing integrations in India, we establish a robust technical chassis. Every subsequent venture we build or partner with operates on this ironclad foundation - ensuring that we never go to market with inferior systems.
-              </p>
-              <p className="text-[16px] font-light text-brand-muted leading-[1.85]">
-                Our expansions into sectors like manufacturing, FinTech, and healthcare are driven by deep capability, not just speed-to-market. When Vanspire enters a space, we do so with unparalleled systemic relevance and absolute structural integrity.
-              </p>
-            </MotionWrapper>
-          </div>
-
-          {/* <MotionWrapper delay={0.2} className="mt-16">
-            <img
-              src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2000&q=80"
-              alt="Vanspire vision - long-term enterprise thinking"
-              className="w-full h-[320px] md:h-[420px] object-cover"
-            />
-          </MotionWrapper> */}
+          ))}
         </div>
       </section>
 
-      <div className="divider" />
+      <Lifecycle showCta={false} />
 
-       {/* Team */}
-      <section id="team" className="section-pad bg-brand-offwhite">
+      <section id="team" className="section-pad">
         <div className="container-site">
-          <MotionWrapper className="mb-16">
-            <SectionLabel>The Team</SectionLabel>
-            <h2 className="text-[clamp(2rem,4vw,3.2rem)] font-light tracking-[-0.04em] text-brand-black mt-4 max-w-2xl leading-[1.1]">
-              The People Behind Vanspire
-            </h2>
+          <MotionWrapper className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+            <div className="max-w-2xl">
+              <SectionLabel>The founders</SectionLabel>
+              <h2 className="text-display-md">The people behind Vanspire.</h2>
+            </div>
+            <p className="max-w-sm text-ink/60">
+              Four founders, four disciplines. You will work directly with us, not an account manager.
+            </p>
           </MotionWrapper>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-8 md:gap-8 2xl:gap-5">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 md:gap-6">
             {team.map((member, i) => (
-              <MotionWrapper key={member.name} delay={i * 0.12}>
+              <MotionWrapper key={member.name} delay={i * 0.1}>
                 <div className="group">
-                  <div className="overflow-hidden mb-6 relative w-full aspect-[2/2.5]">
+                  <div className="relative mb-5 aspect-[2/2.5] w-full overflow-hidden rounded-4xl bg-white">
                     <Image
                       src={member.image}
                       alt={`${member.name} - ${member.role} at Vanspire`}
                       fill
-                      className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
+                      sizes="(min-width: 768px) 25vw, 50vw"
+                      className="object-cover grayscale transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0"
                     />
+                    <a
+                      href={member.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${member.name} on LinkedIn`}
+                      className="absolute bottom-3 right-3 flex h-10 w-10 items-center justify-center rounded-full bg-white text-ink opacity-0 shadow-lg transition-all duration-300 hover:bg-accent hover:text-white group-hover:opacity-100 focus-visible:opacity-100"
+                    >
+                      <Linkedin size={16} aria-hidden="true" />
+                    </a>
                   </div>
-                  <p className="text-label !tracking-[0.05em] text-brand-muted mb-1">{member.role}</p>
-                  <h3 className="text-[20px] font-light tracking-tight text-brand-black mb-3">{member.name}</h3>
-                  <p className="text-[14px] font-light text-brand-muted leading-relaxed">{member.bio}</p>
+                  <p className="text-label mb-1 !tracking-[0.08em] text-accent">{member.role}</p>
+                  <h3 className="mb-2 text-[20px] font-semibold tracking-tight">{member.name}</h3>
+                  <p className="text-[14px] leading-relaxed text-ink/60">{member.bio}</p>
                 </div>
               </MotionWrapper>
             ))}
@@ -184,95 +220,29 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Why Vanspire Exists */}
-      <section className="section-pad bg-brand-offwhite">
+      <section className="pb-20 md:pb-28">
         <div className="container-site">
-          <MotionWrapper className="mb-16">
-            <SectionLabel>Founding Philosophy</SectionLabel>
-            <h2 className="text-[clamp(2rem,4vw,3.5rem)] font-light tracking-[-0.04em] text-brand-black mt-4 max-w-2xl leading-[1.08]">
-              Why Vanspire Exists
-            </h2>
+          <MotionWrapper className="mb-12 max-w-2xl">
+            <SectionLabel>What we value</SectionLabel>
+            <h2 className="text-display-md">How we like to work.</h2>
           </MotionWrapper>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-brand-border">
-            {[
-              {
-                title: 'Discipline over velocity',
-                body: 'We do not sprint to the next opportunistic gap in the market. Every venture within the Vanspire group is engineered to be fully operational and stress-tested before the next division begins. This rigorous discipline is exactly how we ensure software quality compounds exponentially, avoiding the technical debt that cripples rapidly scaled startups.',
-              },
-              {
-                title: 'Technology as structural infrastructure',
-                body: 'Technology is never viewed as an extraneous service - it is the central nervous system of everything we build. Our first active vertical treats custom software development, cloud computing architectures, data ecosystems, and cybersecurity systems as the fundamental infrastructure required for an enterprise to endure generational shifts.',
-              },
-              {
-                title: 'Enterprise-grade by absolute default',
-                body: 'We build to institutional, Forture 500 standards from day zero. Whether we are architecting an MVP for an ambitious startup or overhauling legacy systems for a large corporation, our output is inherently production-grade, meticulously documented, maximally secure, and definitively built to last.',
-              },
-              {
-                title: 'Compounding group value & IP',
-                body: 'Each distinct venture within our ecosystem shares intellectual property, cloud resources, market reputation, and engineering principles with the broader group. As Vanspire expands into new verticals like healthcare or FinTech, every technological addition fundamentally strengthens the core capability of the whole - creating a deeply defensible moat against competitors.',
-              },
-            ].map((v, i) => (
-              <MotionWrapper key={v.title} delay={i * 0.08}>
-                <div className="bg-brand-offwhite p-10 md:p-12 h-full">
-                  <h3 className="text-[18px] font-medium text-brand-black mb-4 tracking-tight">{v.title}</h3>
-                  <p className="text-[15px] font-light text-brand-muted leading-relaxed">{v.body}</p>
+          <div className="overflow-hidden rounded-5xl bg-white">
+            {VALUES.map((value, i) => (
+              <MotionWrapper key={value.title} delay={i * 0.06}>
+                <div className="grid gap-4 border-b border-ink/10 px-7 py-8 last:border-b-0 md:grid-cols-12 md:items-center md:px-10">
+                  <span className="text-sm font-medium text-ink/30 md:col-span-1">{String(i + 1).padStart(2, '0')}</span>
+                  <h3 className="text-2xl font-semibold tracking-tight md:col-span-4">{value.title}</h3>
+                  <p className="text-[15px] leading-relaxed text-ink/60 md:col-span-7">{value.description}</p>
                 </div>
               </MotionWrapper>
             ))}
           </div>
+          <MotionWrapper className="mt-10 flex flex-wrap gap-4">
+            <Button href="/careers" variant="secondary">Join the team</Button>
+            <Button href="/contact">Work with us</Button>
+          </MotionWrapper>
         </div>
       </section>
-
-      {/* Structured Growth Model */}
-      <section className="section-pad bg-white">
-        <div className="container-site">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-            <MotionWrapper className="lg:col-span-5">
-              <SectionLabel>Growth Model</SectionLabel>
-              <h2 className="text-[clamp(2rem,4vw,3.2rem)] font-light tracking-[-0.04em] text-brand-black mt-4 mb-8 leading-[1.1]">
-                Structured for<br />Deliberate Growth
-              </h2>
-              <p className="text-[15px] font-light text-brand-muted leading-[1.85] mb-6">
-                Vanspire is structured as a group brand - similar in philosophy to how the
-                world's most enduring conglomerates operate, but leaner, faster, and
-                technology-native.
-              </p>
-              <p className="text-[15px] font-light text-brand-muted leading-[1.85]">
-                Future verticals may include manufacturing, engineering, healthcare technology,
-                financial infrastructure, and education - each selected based on where
-                Vanspire's accumulated expertise creates the most defensible position.
-              </p>
-              <Link
-                href="/ventures"
-                className="inline-flex items-center gap-2 mt-8 text-[13px] font-medium text-brand-black border-b border-brand-black/20 pb-1 hover:border-brand-black transition-all"
-              >
-                Explore Our Ventures →
-              </Link>
-            </MotionWrapper>
-
-            <div className="lg:col-span-7">
-              <div className="space-y-0">
-                {growthStages.map((s, i) => (
-                  <MotionWrapper key={s.step} delay={i * 0.12}>
-                    <div className="py-10 border-b border-brand-border first:border-t">
-                      <div className="flex gap-8">
-                        <span className="text-label text-brand-border w-8 flex-shrink-0 mt-1">{s.step}</span>
-                        <div>
-                          <h3 className="text-[18px] font-medium text-brand-black mb-2 tracking-tight">{s.title}</h3>
-                          <p className="text-[15px] font-light text-brand-muted leading-relaxed">{s.desc}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </MotionWrapper>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-     
 
       <CTASection />
     </>

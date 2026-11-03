@@ -4,10 +4,10 @@ import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 
 const DEFAULT_SUGGESTED = [
-  { id: 'q1', label: 'Tell me about Digital Solutions' },
-  { id: 'q2', label: 'What is your Hospital Management System?' },
-  { id: 'q3', label: 'Do you offer ERP implementation?' },
-  { id: 'q4', label: 'What is Enterprise System Integration?' },
+  { id: 'q1', label: 'What services do you offer?' },
+  { id: 'q2', label: 'Can you build AI and automation solutions?' },
+  { id: 'q3', label: 'Do you build mobile apps?' },
+  { id: 'q4', label: 'What is your Hospital Management System?' },
   { id: 'q5', label: 'How do I work with Vanspire?' },
 ]
 

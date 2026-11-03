@@ -1,80 +1,57 @@
-'use client'
-
-import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
-import Link from 'next/link'
 import Image from 'next/image'
+import Button from '@/components/ui/Button'
+import Marquee from '@/components/ui/Marquee'
+import MotionWrapper from '@/components/ui/MotionWrapper'
+import { SITE } from '@/lib/site'
 
-export default function CTASection() {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
+interface CTASectionProps {
+  title?: React.ReactNode
+  description?: string
+  primaryLabel?: string
+  primaryHref?: string
+}
 
+export default function CTASection({
+  title = (
+    <>
+      Have an idea? <span className="text-accent">Let&apos;s build it</span> together.
+    </>
+  ),
+  description = 'Tell us what you are working on. We will come back within one working day with honest thoughts, no sales pitch.',
+  primaryLabel = 'Start a project',
+  primaryHref = '/contact',
+}: CTASectionProps) {
   return (
-    <section ref={ref} className="relative section-pad bg-white overflow-hidden">
-      {/* Background image - muted */}
-      <div className="absolute inset-0 z-0">
+    <section className="px-3 pb-3 pt-6 md:px-4 md:pt-10">
+      <div className="relative overflow-hidden rounded-5xl bg-ink text-white">
         <Image
-          src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=2000&q=80"
+          src="/img/ai-red-chip.webp"
           alt=""
           fill
-          className="object-cover opacity-[0.04]"
+          sizes="100vw"
+          className="object-cover opacity-20"
           aria-hidden="true"
         />
-      </div>
-
-      <div className="relative z-10 container-site">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
-            className="text-label text-brand-muted mb-6"
-          >
-            Start the Conversation
-          </motion.p>
-
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="text-[clamp(2.2rem,5vw,4.5rem)] font-light tracking-[-0.04em] text-brand-black leading-[1.05] mb-8"
-          >
-            Let&apos;s Build Something<br />
-            <span className="italic text-brand-muted">That Lasts</span>
-          </motion.h2>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.25 }}
-            className="text-[16px] font-light text-brand-muted max-w-2xl mx-auto mb-14 leading-[1.8]"
-          >
-            Whether you&apos;re exploring a technology solution, a long-term partnership,
-            or a shared vision - Vanspire is built for conversations that matter.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: 0.4 }}
-            className="flex flex-wrap items-center justify-center gap-4"
-          >
-            <Link
-              href="/contact"
-              className="group inline-flex items-center gap-3 h-[56px] px-12 bg-brand-black text-white text-[14px] font-medium tracking-wide hover:bg-brand-muted transition-all duration-300"
-            >
-              Start a Conversation
-              <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
-            </Link>
-          </motion.div>
-
-          {/* Subtle divider below */}
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={inView ? { scaleX: 1 } : {}}
-            transition={{ duration: 1, delay: 0.6 }}
-            className="mt-24 w-full h-px bg-brand-border origin-left"
+        <div className="bg-dots absolute inset-0" aria-hidden="true" />
+        <div className="relative z-10">
+          <Marquee
+            className="border-b border-white/10 py-6 font-impact text-[clamp(3rem,8vw,7rem)] uppercase leading-none tracking-wide text-white/80"
+            itemClassName="text-outline"
+            items={['Strategy', 'Design', 'Engineering', 'AI', 'Growth']}
+            separator={<span className="mx-8 inline-block h-3 w-3 rounded-full bg-accent" />}
           />
+          <div className="container-site py-20 text-center md:py-28">
+            <MotionWrapper>
+              <h2 className="text-display-lg mx-auto mb-6 max-w-4xl">{title}</h2>
+              <p className="mx-auto mb-10 max-w-xl text-lg text-white/65">{description}</p>
+              <div className="flex flex-wrap items-center justify-center gap-4">
+                <Button href={primaryHref} variant="accent" size="lg">{primaryLabel}</Button>
+                <Button href={`mailto:${SITE.email}`} variant="ghost" size="lg" arrow={false}>
+                  {SITE.email}
+                </Button>
+              </div>
+            </MotionWrapper>
+          </div>
         </div>
       </div>
     </section>

@@ -1,18 +1,25 @@
 import type { Metadata } from 'next'
 import HomeHero from '@/components/sections/HomeHero'
-import BrandStatement from '@/components/sections/BrandStatement'
-import CurrentFocus from '@/components/sections/CurrentFocus'
-import Capabilities from '@/components/sections/Capabilities'
-import Philosophy from '@/components/sections/Philosophy'
-import FutureReady from '@/components/sections/FutureReady'
-import ValuesSection from '@/components/sections/ValuesSection'
+import MarqueeBand from '@/components/sections/MarqueeBand'
+import HomeIntro from '@/components/sections/HomeIntro'
+import ServicesGrid from '@/components/sections/ServicesGrid'
+import Lifecycle from '@/components/sections/Lifecycle'
+import FeaturedWork from '@/components/sections/FeaturedWork'
+import WhyUs from '@/components/sections/WhyUs'
+import EngagementModels from '@/components/sections/EngagementModels'
+import Industries from '@/components/sections/Industries'
+import InsightsPreview from '@/components/sections/InsightsPreview'
 import FAQSection from '@/components/sections/FAQSection'
 import CTASection from '@/components/sections/CTASection'
+import { SITE_URL } from '@/lib/site'
+
+const TITLE = 'Software, AI, Mobile & Digital Product Firm in India | Vanspire'
+const DESCRIPTION =
+  'Vanspire is a product and IT firm in Kerala, India. We build custom software, AI and automation, mobile apps, web platforms, cloud systems and digital marketing, from first idea to long-term growth.'
 
 export const metadata: Metadata = {
-  title: 'Best Website Development, Digital Marketing & Mobile App Company in India | Vanspire',
-  description:
-    'Vanspire is the top choice for software solutions, website development, mobile apps, and digital marketing in India and Kerala, delivering scalable cloud and IoT solutions.',
+  title: { absolute: TITLE },
+  description: DESCRIPTION,
   alternates: {
     canonical: '/',
   },
@@ -20,26 +27,26 @@ export const metadata: Metadata = {
 
 export default function HomePage() {
   const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Best Website Development, Digital Marketing & Mobile App Company in India | Vanspire",
-    "description": "Vanspire is the top choice for software solutions, website development, mobile apps, and digital marketing in India and Kerala, delivering scalable cloud and IoT solutions.",
-    "url": "https://vanspire.in",
-  };
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: TITLE,
+    description: DESCRIPTION,
+    url: SITE_URL,
+  }
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <HomeHero />
-      <BrandStatement />
-      <CurrentFocus />
-      <Capabilities />
-      <Philosophy />
-      <FutureReady />
-      <ValuesSection />
+      <MarqueeBand />
+      <HomeIntro />
+      <ServicesGrid />
+      <Lifecycle />
+      <FeaturedWork />
+      <WhyUs />
+      <EngagementModels />
+      <Industries />
+      <InsightsPreview />
       <FAQSection />
       <CTASection />
     </>

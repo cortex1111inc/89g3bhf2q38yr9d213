@@ -232,7 +232,7 @@ export default function InsightArticle1() {
 
                   <div className="bg-brand-offwhite p-8">
                     <p className="text-label text-brand-muted mb-4">Related Service</p>
-                    <Link href="/ventures/technology/services/software-web-platforms" className="text-[14px] font-light text-brand-black hover:text-brand-muted transition-colors">
+                    <Link href="/services/custom-software-development" className="text-[14px] font-light text-brand-black hover:text-brand-muted transition-colors">
                       Software & Web Platforms →
                     </Link>
                     <p className="text-[12px] text-brand-muted mt-2 leading-relaxed">

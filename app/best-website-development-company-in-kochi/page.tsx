@@ -1,33 +1,21 @@
 import type { Metadata } from 'next'
-import HomeHero from '@/components/sections/HomeHero'
-import BrandStatement from '@/components/sections/BrandStatement'
-import CurrentFocus from '@/components/sections/CurrentFocus'
-import Capabilities from '@/components/sections/Capabilities'
-import Philosophy from '@/components/sections/Philosophy'
-import FutureReady from '@/components/sections/FutureReady'
-import ValuesSection from '@/components/sections/ValuesSection'
-import CTASection from '@/components/sections/CTASection'
+import LandingPage from '@/components/sections/LandingPage'
+import { getLanding } from '@/lib/landing'
+
+const data = getLanding('best-website-development-company-in-kochi')!
 
 export const metadata: Metadata = {
-  title: 'Best Website Development Company in Kochi | Vanspire Innovations',
-  description:
-    'Looking for the best website development company in Kochi? Vanspire delivers premium, scalable web solutions, enterprise software, and robust cloud infrastructure.',
-  alternates: {
-    canonical: '/best-website-development-company-in-kochi',
+  title: { absolute: data.metaTitle },
+  description: data.metaDescription,
+  alternates: { canonical: '/best-website-development-company-in-kochi' },
+  openGraph: {
+    title: data.metaTitle,
+    description: data.metaDescription,
+    url: '/best-website-development-company-in-kochi',
+    images: [{ url: '/ogimage.webp', width: 1200, height: 630, alt: data.h1 }],
   },
 }
 
-export default function KochiWebDevelopmentPage() {
-  return (
-    <>
-      <HomeHero />
-      <BrandStatement />
-      <CurrentFocus />
-      <Capabilities />
-      <Philosophy />
-      <FutureReady />
-      <ValuesSection />
-      <CTASection />
-    </>
-  )
+export default function Page() {
+  return <LandingPage data={data} />
 }

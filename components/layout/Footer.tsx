@@ -3,28 +3,34 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { MapPin, Mail } from 'lucide-react'
+import { Mail, MapPin, ArrowUpRight, Linkedin, Instagram, Twitter, Youtube, Facebook } from 'lucide-react'
 import { flushQueuedSubmissions, queueSubmission } from '@/lib/contactQueue'
+import { SERVICES } from '@/lib/services'
+import { SITE } from '@/lib/site'
 
 const footerLinks = {
   company: [
     { name: 'About', href: '/about' },
-    { name: 'Ventures', href: '/ventures' },
+    { name: 'Our work', href: '/work' },
+    { name: 'How we work', href: '/process' },
     { name: 'Insights', href: '/insights' },
+    { name: 'Careers', href: '/careers' },
+    { name: 'FAQ', href: '/faq' },
     { name: 'Contact', href: '/contact' },
-  ],
-  services: [
-    { name: 'Software Platforms', href: '/ventures/technology/services/software-web-platforms' },
-    { name: 'Application Development', href: '/ventures/technology/services/application-development' },
-    { name: 'Cloud Architecture', href: '/ventures/technology/services/cloud-system-architecture' },
-    { name: 'IoT Solutions', href: '/ventures/technology/services/iot-smart-solutions' },
-    { name: 'Digital Transformation', href: '/ventures/technology/services/digital-transformation' },
   ],
   legal: [
     { name: 'Terms & Conditions', href: '/terms' },
     { name: 'Privacy Policy', href: '/privacy' },
   ],
 }
+
+const socials = [
+  { name: 'LinkedIn', href: SITE.social.linkedin, Icon: Linkedin },
+  { name: 'Instagram', href: SITE.social.instagram, Icon: Instagram },
+  { name: 'X (Twitter)', href: SITE.social.twitter, Icon: Twitter },
+  { name: 'YouTube', href: SITE.social.youtube, Icon: Youtube },
+  { name: 'Facebook', href: SITE.social.facebook, Icon: Facebook },
+]
 
 type SubscribeStatus = 'idle' | 'submitting' | 'success' | 'queued' | 'error'
 
@@ -113,140 +119,147 @@ export default function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="bg-brand-black text-white">
-      <div className="container-site py-20 md:py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 mb-20">
-          <div>
-            <Link href="/" className="inline-block mb-8">
-              <Image src="/whitelogo.svg" alt="Vanspire" width={160} height={32} className="h-8 w-auto" />
-            </Link>
-            <p className="text-white/50 font-light text-[15px] leading-relaxed max-w-sm mb-8">
-              A future-focused brand group building technology-driven ventures.
-              Structured for the long term.
-            </p>
-
-            <ul className="space-y-3">
-              <li className="flex items-center gap-3 text-white/40 text-[14px] font-light">
-                <MapPin size={14} className="flex-shrink-0" />
-                India
-              </li>
-              <li className="flex items-center gap-3 text-white/40 text-[14px] font-light">
-                <Mail size={14} className="flex-shrink-0" />
-                <Link
-                  href="/contact"
-                  className="hover:text-white transition-colors duration-200"
-                >
-                  Contact Us
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <p className="text-[11px] uppercase tracking-widest text-white/30 mb-4">
-              Stay informed
-            </p>
-            <h3 className="text-2xl md:text-3xl font-light tracking-tighter text-white mb-6 leading-tight">
-              Thought leadership,<br />straight to your inbox.
-            </h3>
-            <form onSubmit={handleSubscribe} className="w-full sm:max-w-md">
-              <div className="flex gap-0 w-full sm:ml-0">
-                <input
-                  type="email"
-                  placeholder="Your email address"
-                  value={email}
-                  onChange={(event) => {
-                    setEmail(event.target.value)
-                    setError('')
-                  }}
-                  disabled={status === 'submitting'}
-                  className="flex-1 px-3 sm:px-4 h-[48px] text-[14px] bg-white/5 border border-white/10 text-white placeholder-white/30 outline-none focus:border-white/30 transition-colors font-light"
-                />
-                <button
-                  type="submit"
-                  disabled={status === 'submitting'}
-                  className="h-[48px] px-4 sm:px-6 bg-white text-brand-black text-[13px] font-medium hover:bg-white/90 transition-colors disabled:opacity-60 flex-shrink-0"
-                >
-                  {status === 'submitting'
-                    ? 'Saving...'
-                    : status === 'success'
-                      ? 'Subscribed'
-                      : status === 'queued'
-                        ? 'Queued'
-                        : 'Subscribe'}
-                </button>
-              </div>
-              <p className="mt-2 text-[13px] text-white/40" aria-live="polite">
-                {status === 'queued'
-                  ? "Saved offline. We'll submit this when you're back online."
-                  : status === 'success'
-                    ? "Thanks. We'll keep you posted."
-                    : 'Occasional updates on technology, systems, and ventures.'}
+    <footer className="px-3 pb-3 md:px-4 md:pb-4">
+      <div className="overflow-hidden rounded-5xl bg-ink text-white">
+        <div className="container-site py-16 md:py-20">
+          <div className="mb-16 grid gap-12 lg:grid-cols-2 lg:gap-24">
+            <div>
+              <Link href="/" className="mb-8 inline-block" aria-label="Vanspire home">
+                <Image src="/whitelogo.svg" alt="Vanspire" width={160} height={32} className="h-8 w-auto" />
+              </Link>
+              <p className="mb-8 max-w-sm text-[15px] leading-relaxed text-white/60">
+                A product and IT firm. We design, build and grow software, AI, mobile and web products, and the
+                marketing that brings them to market.
               </p>
-              {error && <p className="text-red-400 text-[13px] mt-2">{error}</p>}
-            </form>
+              <ul className="mb-8 space-y-3 text-[14px] text-white/55">
+                <li className="flex items-center gap-3">
+                  <MapPin size={15} className="shrink-0 text-accent" aria-hidden="true" />
+                  {SITE.location}
+                </li>
+                <li className="flex items-center gap-3">
+                  <Mail size={15} className="shrink-0 text-accent" aria-hidden="true" />
+                  <a href={`mailto:${SITE.email}`} className="transition-colors hover:text-white">
+                    {SITE.email}
+                  </a>
+                </li>
+              </ul>
+              <div className="flex gap-2">
+                {socials.map(({ name, href, Icon }) => (
+                  <a
+                    key={name}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={name}
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-accent"
+                  >
+                    <Icon size={16} aria-hidden="true" />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <p className="mb-4 text-[11px] uppercase tracking-widest text-white/40">Stay informed</p>
+              <h3 className="mb-6 text-3xl font-semibold leading-tight tracking-tighter md:text-4xl">
+                Practical thinking on tech,
+                <br />
+                straight to your inbox.
+              </h3>
+              <form onSubmit={handleSubscribe} className="w-full sm:max-w-md" noValidate>
+                <label htmlFor="footer-email" className="sr-only">
+                  Email address
+                </label>
+                <div className="flex w-full items-center rounded-full bg-white/10 p-1.5 focus-within:ring-2 focus-within:ring-accent">
+                  <input
+                    id="footer-email"
+                    type="email"
+                    placeholder="Your email address"
+                    value={email}
+                    onChange={(event) => {
+                      setEmail(event.target.value)
+                      setError('')
+                    }}
+                    disabled={status === 'submitting'}
+                    className="h-11 min-w-0 flex-1 bg-transparent px-4 text-[14px] text-white outline-none placeholder:text-white/40"
+                  />
+                  <button
+                    type="submit"
+                    disabled={status === 'submitting'}
+                    className="h-11 shrink-0 rounded-full bg-accent px-6 text-[13px] font-semibold text-white transition-colors hover:bg-accent-dark disabled:opacity-60"
+                  >
+                    {status === 'submitting'
+                      ? 'Saving...'
+                      : status === 'success'
+                        ? 'Subscribed'
+                        : status === 'queued'
+                          ? 'Queued'
+                          : 'Subscribe'}
+                  </button>
+                </div>
+                <p className="mt-3 pl-4 text-[13px] text-white/45" aria-live="polite">
+                  {status === 'queued'
+                    ? "Saved offline. We'll submit this when you're back online."
+                    : status === 'success'
+                      ? "Thanks. We'll keep you posted."
+                      : 'Occasional updates on software, AI and growth. No spam.'}
+                </p>
+                {error && <p className="mt-2 pl-4 text-[13px] text-red-400">{error}</p>}
+              </form>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-10 border-t border-white/10 pt-12 md:grid-cols-4">
+            <div className="col-span-2">
+              <p className="mb-5 text-[11px] uppercase tracking-widest text-white/40">Services</p>
+              <ul className="grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2">
+                {SERVICES.map((service) => (
+                  <li key={service.slug}>
+                    <Link
+                      href={`/services/${service.slug}`}
+                      className="group inline-flex items-center gap-1 text-[14px] text-white/60 transition-colors hover:text-white"
+                    >
+                      {service.short}
+                      <ArrowUpRight size={12} className="opacity-0 transition-opacity group-hover:opacity-100" aria-hidden="true" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="mb-5 text-[11px] uppercase tracking-widest text-white/40">Company</p>
+              <ul className="space-y-3">
+                {footerLinks.company.map((item) => (
+                  <li key={item.name}>
+                    <Link href={item.href} className="text-[14px] text-white/60 transition-colors hover:text-white">
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="mb-5 text-[11px] uppercase tracking-widest text-white/40">Legal</p>
+              <ul className="space-y-3">
+                {footerLinks.legal.map((item) => (
+                  <li key={item.name}>
+                    <Link href={item.href} className="text-[14px] text-white/60 transition-colors hover:text-white">
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-10 pt-12 border-t border-white/10">
-          <div>
-            <p className="text-[11px] uppercase tracking-widest text-white/30 mb-5">Company</p>
-            <ul className="space-y-3">
-              {footerLinks.company.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className="text-[14px] font-light text-white/50 hover:text-white transition-colors duration-200"
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+        <div className="border-t border-white/10">
+          <div className="container-site flex flex-col items-center justify-between gap-3 py-6 sm:flex-row">
+            <p className="text-[13px] text-white/40">
+              &copy; {year} {SITE.legalName}. All rights reserved.
+            </p>
+            <p className="text-[13px] text-white/30">Product to IT. One firm.</p>
           </div>
-
-          <div className="col-span-2 md:col-span-1">
-            <p className="text-[11px] uppercase tracking-widest text-white/30 mb-5">Services</p>
-            <ul className="space-y-3">
-              {footerLinks.services.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className="text-[14px] font-light text-white/50 hover:text-white transition-colors duration-200"
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <p className="text-[11px] uppercase tracking-widest text-white/30 mb-5">Legal</p>
-            <ul className="space-y-3">
-              {footerLinks.legal.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className="text-[14px] font-light text-white/50 hover:text-white transition-colors duration-200"
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div className="border-t border-white/10">
-        <div className="container-site flex flex-col sm:flex-row justify-between items-center gap-4 py-6">
-          <p className="text-[13px] text-white/30 font-light">
-            Copyright {year} Vanspire. All rights reserved.
-          </p>
-          <p className="text-[13px] text-white/20 font-light">
-            Building tomorrow&apos;s ventures, today.
-          </p>
         </div>
       </div>
     </footer>

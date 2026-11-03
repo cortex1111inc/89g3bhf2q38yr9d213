@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
+import { Instrument_Sans, Anton } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -11,33 +12,44 @@ import GoogleAnalytics from "@/components/Analytics";
 import ServiceWorkerRegister from "@/components/pwa/ServiceWorkerRegister";
 import { SITE_URL } from "@/lib/site";
 
+const sans = Instrument_Sans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const impact = Anton({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-impact",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   applicationName: "Vanspire",
   manifest: "/manifest.webmanifest",
 
   title: {
-    default: "Vanspire | Best Software, Web & App Development Company in India",
+    default: "Vanspire | Software, AI, Mobile & Digital Product Firm in India",
     template: "%s | Vanspire",
   },
 
   description:
-    "Vanspire is the best software solutions, website development, mobile apps, and digital marketing company in India and Kerala.",
+    "Vanspire is a product and IT firm. We build custom software, AI and automation, mobile apps, web platforms, cloud systems and digital marketing for ambitious businesses in India and worldwide.",
 
   keywords: [
-    "best software solutions",
-    "best website development company",
-    "best digital marketing company",
-    "best website solution",
-    "best mobile applications development in india",
-    "IoT solution",
-    "software website apps",
-    "cloud marketing",
-    "kerala",
-    "india",
+    "custom software development company",
+    "AI and automation solutions",
+    "mobile app development",
+    "website development company",
+    "IT consulting",
+    "digital marketing agency",
+    "cloud and DevOps services",
+    "product design and UX",
+    "software company Kerala",
+    "software company India",
     "Vanspire",
-    "enterprise software",
-    "scalable cloud systems",
   ],
 
   authors: [{ name: "Vanspire Innovations", url: SITE_URL }],
@@ -50,9 +62,9 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: "Vanspire Innovations | Best Software & Web Development Company",
+    title: "Vanspire | Software, AI, Mobile & Digital Product Firm",
     description:
-      "Vanspire offers the best software solutions, website development, mobile apps, IoT, and digital marketing in India and Kerala.",
+      "Custom software, AI and automation, mobile apps, web platforms, IT consulting and digital marketing from one product and IT firm.",
     url: SITE_URL,
     siteName: "Vanspire",
     images: [
@@ -69,9 +81,9 @@ export const metadata: Metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: "Vanspire Innovations | Best Software & Web Development Company",
+    title: "Vanspire | Software, AI, Mobile & Digital Product Firm",
     description:
-      "Vanspire offers the best software solutions, website development, mobile apps, IoT, and digital marketing in India and Kerala.",
+      "Custom software, AI and automation, mobile apps, web platforms, IT consulting and digital marketing from one product and IT firm.",
     images: ["/ogimage.webp"],
     creator: "@vanspirein",
   },
@@ -108,7 +120,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0a0a0a",
+  themeColor: "#101010",
   colorScheme: "light",
 };
 
@@ -129,7 +141,7 @@ const jsonLd = {
         "https://www.facebook.com/vanspire",
       ],
       description:
-        "Vanspire Innovations is the best software solutions, website development, mobile apps, and digital marketing company in India and Kerala, specializing in IoT and cloud infrastructure.",
+        "Vanspire Innovations is a product and IT firm in Kerala, India, building custom software, AI and automation, mobile apps, web platforms, cloud systems and digital marketing.",
       foundingDate: "2024",
       address: {
         "@type": "PostalAddress",
@@ -174,14 +186,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${sans.variable} ${impact.variable}`}>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="font-sans bg-white text-brand-black">
+      <body className="font-sans bg-canvas text-ink">
         <Header />
         <LayoutWrapper>
           <main className="flex-1">{children}</main>

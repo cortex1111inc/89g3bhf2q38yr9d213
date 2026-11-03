@@ -1,167 +1,83 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
+import { ArrowUpRight } from 'lucide-react'
+import PageHero from '@/components/sections/PageHero'
+import CTASection from '@/components/sections/CTASection'
 import MotionWrapper from '@/components/ui/MotionWrapper'
-import SectionLabel from '@/components/ui/SectionLabel'
+import { INSIGHTS } from '@/lib/content'
 
 export const metadata: Metadata = {
-  title: 'Vanspire Insights | Enterprise Technology & Digital Strategy',
+  title: 'Insights | Software, Cloud & Digital Strategy from Vanspire',
   description:
-    'Vanspire Insights - thought leadership on enterprise software, cloud architecture, digital transformation, and technology strategy. Written for leaders who build for the long term.',
+    'Practical articles on software architecture, digital transformation, cloud, AI and growth from the Vanspire team. Written for leaders who build for the long term.',
   keywords: [
-    'enterprise technology insights',
-    'digital transformation thought leadership',
+    'software architecture insights',
+    'digital transformation articles',
     'cloud architecture blog',
-    'enterprise software strategy',
-    'technology leadership articles',
+    'technology strategy',
     'Vanspire insights',
-    'IT strategy perspectives',
   ],
   openGraph: {
-    title: 'Vanspire Insights | Enterprise Technology & Digital Strategy',
-    description: 'Perspectives on enterprise technology, systems thinking, and digital transformation from the Vanspire team.',
+    title: 'Vanspire Insights | Software, Cloud & Digital Strategy',
+    description: 'Perspectives on software, systems thinking and digital transformation from the Vanspire team.',
     url: '/insights',
     images: [{ url: '/ogimage.webp', width: 1200, height: 630, alt: 'Vanspire Insights' }],
   },
   alternates: { canonical: '/insights' },
 }
 
-const articles = [
-  {
-    category: 'Systems Architecture',
-    title: 'Building Scalable Digital Systems for Long-Term Growth',
-    excerpt:
-      'Why most companies build fragile systems - and the architectural principles that separate software built to endure from software built to ship.',
-    date: 'February 2026',
-    readTime: '7 min read',
-    slug: '/insights/building-scalable-digital-systems',
-    image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=900&q=80',
-    keywords: ['Scalable Systems', 'Architecture', 'Enterprise Software'],
-  },
-  {
-    category: 'Digital Transformation',
-    title: 'Designing Future-Ready Enterprise Technology Strategies',
-    excerpt:
-      'Strategic thinking beyond short-term technology decisions. How enterprise leaders can build technology programmes that remain relevant as business and market conditions evolve.',
-    date: 'January 2026',
-    readTime: '8 min read',
-    slug: '/insights/future-ready-enterprise-technology-strategy',
-    image: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=900&q=80',
-    keywords: ['Strategy', 'Digital Transformation', 'Enterprise IT'],
-  },
-]
-
 export default function InsightsPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="pt-40 pb-24 md:pt-52 md:pb-32 bg-white">
-        <div className="container-site">
-          <MotionWrapper>
-            <SectionLabel>Insights</SectionLabel>
-          </MotionWrapper>
-          <MotionWrapper delay={0.1}>
-            <h1 className="text-[clamp(2.5rem,6vw,5.5rem)] font-light tracking-[-0.04em] text-brand-black leading-[1.02] mt-4 mb-8 max-w-4xl">
-              We write about<br />
-              <em className="not-italic text-brand-muted">what we think</em><br />
-              actually matters.
-            </h1>
-          </MotionWrapper>
-          <MotionWrapper delay={0.2}>
-            <p className="text-[17px] font-light text-brand-muted max-w-2xl leading-[1.85]">
-              Perspectives on enterprise technology, digital transformation, and systems
-              thinking. Written for leaders who are building for the long term - not
-              chasing trend lists or recycling conference keynotes.
-            </p>
-          </MotionWrapper>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Insights"
+        breadcrumbs={[{ name: 'Insights' }]}
+        title={
+          <>
+            Thinking from the team <span className="text-accent">building it</span>.
+          </>
+        }
+        description="Practical perspectives on software, systems and digital strategy, written for people who make technology decisions."
+      />
 
-      <div className="divider" />
-
-      {/* Articles */}
-      <section className="section-pad bg-white">
-        <div className="container-site">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            {articles.map((article, i) => (
-              <MotionWrapper key={article.slug} delay={i * 0.1}>
-                <Link href={article.slug} className="group block">
-                  <div className="overflow-hidden mb-7 relative w-full h-[280px]">
+      <section className="pb-20 md:pb-28">
+        <div className="container-site grid gap-4 md:grid-cols-2">
+          {INSIGHTS.map((post, i) => (
+            <MotionWrapper key={post.href} delay={i * 0.08}>
+              <Link href={post.href} className="group block h-full">
+                <article className="flex h-full flex-col overflow-hidden rounded-5xl bg-white">
+                  <div className="relative aspect-[16/10] overflow-hidden">
                     <Image
-                      src={article.image}
-                      alt={article.title}
+                      src={post.image}
+                      alt={`${post.title} cover image`}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   </div>
-                  <div className="flex items-center gap-4 mb-4">
-                    <span className="text-[11px] font-medium uppercase tracking-widest text-brand-muted border border-brand-border px-3 py-1">
-                      {article.category}
+                  <div className="flex flex-1 flex-col p-7 md:p-10">
+                    <div className="mb-5 flex flex-wrap items-center gap-3 text-[13px] text-ink/50">
+                      <span className="rounded-full bg-canvas px-3 py-1 font-medium text-ink">{post.category}</span>
+                      <span>{post.date} · {post.readTime}</span>
+                    </div>
+                    <h2 className="mb-4 text-2xl font-semibold leading-tight tracking-tight md:text-3xl">{post.title}</h2>
+                    <p className="mb-8 flex-1 text-[15px] leading-relaxed text-ink/60">{post.excerpt}</p>
+                    <span className="inline-flex items-center gap-2 text-[14px] font-semibold">
+                      Read article
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-white transition-all duration-300 group-hover:rotate-45 group-hover:bg-accent">
+                        <ArrowUpRight size={15} aria-hidden="true" />
+                      </span>
                     </span>
-                    <span className="text-[12px] font-light text-brand-muted">{article.date}</span>
-                    <span className="text-[12px] font-light text-brand-muted">{article.readTime}</span>
                   </div>
-                  <h2 className="text-[22px] md:text-[26px] font-light tracking-[-0.02em] text-brand-black mb-4 leading-[1.2] group-hover:text-brand-muted transition-colors duration-300">
-                    {article.title}
-                  </h2>
-                  <p className="text-[14px] font-light text-brand-muted leading-relaxed mb-6">
-                    {article.excerpt}
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {article.keywords.map((kw) => (
-                      <span key={kw} className="text-[11px] text-brand-muted font-light">#{kw}</span>
-                    ))}
-                  </div>
-                  <span className="text-[13px] font-medium text-brand-black inline-flex items-center gap-1 border-b border-brand-black/20 pb-1 group-hover:gap-3 transition-all duration-300">
-                    Read article →
-                  </span>
-                </Link>
-              </MotionWrapper>
-            ))}
-          </div>
+                </article>
+              </Link>
+            </MotionWrapper>
+          ))}
         </div>
       </section>
 
-      {/* Related section */}
-      <section className="section-pad bg-brand-offwhite">
-        <div className="container-site">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            <MotionWrapper>
-              <h3 className="text-[17px] font-medium text-brand-black mb-3 tracking-tight">Topics we cover</h3>
-              <ul className="space-y-2">
-                {['Enterprise Software', 'Cloud Architecture', 'Digital Transformation', 'Systems Design', 'Technology Strategy', 'IoT & Smart Systems'].map((t) => (
-                  <li key={t} className="text-[14px] font-light text-brand-muted">{t}</li>
-                ))}
-              </ul>
-            </MotionWrapper>
-            <MotionWrapper delay={0.1}>
-              <h3 className="text-[17px] font-medium text-brand-black mb-3 tracking-tight">Our services</h3>
-              <ul className="space-y-2">
-                {[
-                  { t: 'Software & Web Platforms', h: '/ventures/technology/services/software-web-platforms' },
-                  { t: 'Cloud Architecture', h: '/ventures/technology/services/cloud-system-architecture' },
-                  { t: 'Digital Transformation', h: '/ventures/technology/services/digital-transformation' },
-                ].map((s) => (
-                  <li key={s.t}>
-                    <Link href={s.h} className="text-[14px] font-light text-brand-muted hover:text-brand-black transition-colors">
-                      {s.t} →
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </MotionWrapper>
-            <MotionWrapper delay={0.2}>
-              <h3 className="text-[17px] font-medium text-brand-black mb-3 tracking-tight">Work with Vanspire</h3>
-              <p className="text-[14px] font-light text-brand-muted mb-4 leading-relaxed">
-                If our thinking resonates, we&apos;d welcome a conversation about your technology challenges.
-              </p>
-              <Link href="/contact" className="text-[13px] font-medium text-brand-black border-b border-brand-black/20 pb-1 hover:border-brand-black transition-all">
-                Start a Conversation →
-              </Link>
-            </MotionWrapper>
-          </div>
-        </div>
-      </section>
+      <CTASection />
     </>
   )
 }

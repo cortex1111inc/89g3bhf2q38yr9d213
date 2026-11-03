@@ -210,7 +210,7 @@ export default function InsightArticle2() {
                       through implementation - not just advisory.
                     </p>
                     <Link
-                      href="/ventures/technology/services/digital-transformation"
+                      href="/services/it-consulting"
                       className="mt-4 inline-flex items-center gap-2 text-[13px] font-medium text-brand-black border-b border-brand-black/20 pb-1 hover:border-brand-black transition-all"
                     >
                       Explore our Digital Transformation service →
@@ -237,7 +237,7 @@ export default function InsightArticle2() {
 
                   <div className="bg-brand-offwhite p-8">
                     <p className="text-label text-brand-muted mb-4">Related Service</p>
-                    <Link href="/ventures/technology/services/digital-transformation" className="text-[14px] font-light text-brand-black hover:text-brand-muted transition-colors">
+                    <Link href="/services/it-consulting" className="text-[14px] font-light text-brand-black hover:text-brand-muted transition-colors">
                       Digital Transformation Consulting →
                     </Link>
                     <p className="text-[12px] text-brand-muted mt-2 leading-relaxed">

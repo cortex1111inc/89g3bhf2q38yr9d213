@@ -1,16 +1,28 @@
-🔴 Resubmit These (New pages - not previously indexed)
-URL
-https://vanspire.in/services,
-https://vanspire.in/services/digital-solutions/web-platform-development,
-https://vanspire.in/services/digital-solutions/application-development,
-https://vanspire.in/services/digital-solutions/cloud-infrastructure,
-https://vanspire.in/services/digital-solutions/digital-transformation,
-https://vanspire.in/services/integration/erp-implementation,
-https://vanspire.in/services/integration/hospital-management-system,
-https://vanspire.in/services/integration/enterprise-system-integration
+# Search Console re-indexing after the rebrand
 
-🟡 Also Resubmit These (Existing pages that changed)
-URL	What Changed
-https://vanspire.in/,	Homepage nav changed (Ventures removed)
-https://vanspire.in/sitemap.xml,	Resubmit the sitemap itself - new URLs added
-Everything else (About, Insights, Contact, Ventures, legal pages) is unchanged - no need to touch those.
+Old URLs 308-redirect to their new equivalents (see `next.config.ts`), so rankings carry over.
+Resubmit the sitemap (https://vanspire.in/sitemap.xml) and request indexing for these new URLs:
+
+## New pages
+- https://vanspire.in/services
+- https://vanspire.in/services/custom-software-development
+- https://vanspire.in/services/ai-automation
+- https://vanspire.in/services/mobile-app-development
+- https://vanspire.in/services/web-development
+- https://vanspire.in/services/product-design-ux
+- https://vanspire.in/services/cloud-devops
+- https://vanspire.in/services/it-consulting
+- https://vanspire.in/services/digital-marketing
+- https://vanspire.in/work
+- https://vanspire.in/work/hospital-management-system
+- https://vanspire.in/process
+- https://vanspire.in/faq
+- https://vanspire.in/careers
+
+## Existing pages with new content
+- https://vanspire.in/ , /about , /contact , /insights
+- the four location/keyword landing pages (kochi, kerala, india, iot)
+
+## Retired (now redirect)
+- /ventures and /ventures/technology/** -> /about, /services, /iot-and-software-solutions
+- /services/digital-solutions/** and /services/integration/** -> new /services/* and /work/* pages

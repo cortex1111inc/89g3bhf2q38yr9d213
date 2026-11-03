@@ -1,33 +1,21 @@
 import type { Metadata } from 'next'
-import HomeHero from '@/components/sections/HomeHero'
-import BrandStatement from '@/components/sections/BrandStatement'
-import CurrentFocus from '@/components/sections/CurrentFocus'
-import Capabilities from '@/components/sections/Capabilities'
-import Philosophy from '@/components/sections/Philosophy'
-import FutureReady from '@/components/sections/FutureReady'
-import ValuesSection from '@/components/sections/ValuesSection'
-import CTASection from '@/components/sections/CTASection'
+import LandingPage from '@/components/sections/LandingPage'
+import { getLanding } from '@/lib/landing'
+
+const data = getLanding('iot-and-software-solutions')!
 
 export const metadata: Metadata = {
-  title: 'Top IoT and Software Solutions Company | Vanspire Innovations',
-  description:
-    'Vanspire provides industry-leading IoT solutions, enterprise software, and scalable technology infrastructure designed for long-term growth and digital transformation.',
-  alternates: {
-    canonical: '/iot-and-software-solutions',
+  title: { absolute: data.metaTitle },
+  description: data.metaDescription,
+  alternates: { canonical: '/iot-and-software-solutions' },
+  openGraph: {
+    title: data.metaTitle,
+    description: data.metaDescription,
+    url: '/iot-and-software-solutions',
+    images: [{ url: '/ogimage.webp', width: 1200, height: 630, alt: data.h1 }],
   },
 }
 
-export default function IotSoftwareSolutionsPage() {
-  return (
-    <>
-      <HomeHero />
-      <BrandStatement />
-      <CurrentFocus />
-      <Capabilities />
-      <Philosophy />
-      <FutureReady />
-      <ValuesSection />
-      <CTASection />
-    </>
-  )
+export default function Page() {
+  return <LandingPage data={data} />
 }
