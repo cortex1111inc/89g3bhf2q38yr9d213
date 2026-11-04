@@ -1,7 +1,7 @@
 export const AI_CONTEXT = {
   company: `
 Vanspire (Vanspire Innovations) is a founder-led product and IT firm based in Kerala, India, founded in 2024, working with clients worldwide.
-Leadership: Akshay Krishna is Co-Founder and CEO. Adithyan Dileep is Co-Founder, Founding Director and COO. Vyshnav M (Growth & Markets) and Sreehari S (Systems & Infrastructure) are co-founders.
+Leadership: Akshay Krishna is Co-Founder, Founding Director and CEO. Adithyan Dileep is Co-Founder, Founding Director and COO. Vyshnav M (Growth & Markets) and Sreehari S (Systems & Infrastructure) are co-founders.
 We take clients from product idea to infrastructure to growth: custom software, AI and automation, mobile apps, web platforms, product design, cloud and DevOps, IT consulting and digital marketing.
 Every engagement is scoped individually - we do not offer off-the-shelf retainers or publish standard pricing.
 Pages:

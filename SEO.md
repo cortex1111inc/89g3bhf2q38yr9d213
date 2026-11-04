@@ -23,7 +23,7 @@ GEO = Generative Engine Optimization (being cited by ChatGPT, Claude, Perplexity
 - Optional verification tags via `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` / `NEXT_PUBLIC_BING_SITE_VERIFICATION`.
 
 ## Structured data (one connected graph via stable `@id`s)
-Organization + ProfessionalService (with `founder`, `hasOfferCatalog`, `sameAs`, `knowsAbout`, `areaServed`), WebSite, 4x Person (Akshay Krishna: CEO; Adithyan Dileep: Founding Director and COO; Vyshnav M; Sreehari S), WebPage / AboutPage / ContactPage / CollectionPage with `speakable`, BreadcrumbList on every inner page, Service per service page, SoftwareApplication (HMS), CreativeWork (solutions), HowTo (process), BlogPosting + Blog (insights), FAQPage (one per page), ItemList (services, work), geo-scoped Service on landing pages.
+Organization + ProfessionalService (with `founder`, `hasOfferCatalog`, `sameAs`, `knowsAbout`, `areaServed`), WebSite, 4x Person (Akshay Krishna: Founding Director and CEO; Adithyan Dileep: Founding Director and COO; Vyshnav M; Sreehari S), WebPage / AboutPage / ContactPage / CollectionPage with `speakable`, BreadcrumbList on every inner page, Service per service page, SoftwareApplication (HMS), CreativeWork (solutions), HowTo (process), BlogPosting + Blog (insights), FAQPage (one per page), ItemList (services, work), geo-scoped Service on landing pages.
 
 ## AEO (answer engines)
 - Answer-first "What is...?" box (`AnswerBox`) near the top of home, About, every service, work and landing page: a direct, self-contained, quotable answer, marked `speakable`.
@@ -48,7 +48,7 @@ Checks titles, descriptions, canonicals, OG/Twitter, headings, alt text, JSON-LD
 ## Things code cannot do (do these off-site)
 1. Verify the domain in **Google Search Console** and **Bing Webmaster Tools**; submit `sitemap.xml`; request indexing for new URLs (`needed-reindexing.md`).
 2. Create a **Google Business Profile** and add a full street address (then add `address.streetAddress` and `geo` to `organizationNode` in `lib/schema.ts` and the footer).
-3. Keep **LinkedIn, Instagram, X, YouTube, Facebook** bios identical to the site wording and make the founders' LinkedIn headlines match their titles here (CEO; Founding Director and COO).
+3. Keep **LinkedIn, Instagram, X, YouTube, Facebook** bios identical to the site wording and make the founders' LinkedIn headlines match their titles here (Founding Director and CEO; Founding Director and COO).
 4. Get listed on credible directories (Clutch, GoodFirms, Crunchbase, relevant Kerala/India business directories) with the same name and description. Third-party mentions are the strongest GEO signal.
 5. Replace the solution playbooks in `lib/work.ts` with real case studies and add genuine client reviews (then add `Review` schema; never add ratings you cannot substantiate).
 6. Publish new articles regularly; add them to `INSIGHTS` in `lib/content.ts` (they flow into sitemap, RSS, llms.txt and schema).

@@ -20,10 +20,10 @@ export const TEAM: Person[] = [
   {
     id: 'akshay-krishna',
     name: 'Akshay Krishna',
-    role: 'Co-Founder & CEO',
-    title: 'Co-Founder and Chief Executive Officer (CEO)',
+    role: 'Founding Director & CEO',
+    title: 'Co-Founder, Founding Director and Chief Executive Officer (CEO)',
     linkedin: 'https://www.linkedin.com/in/akshay-krishna-20764723a/',
-    bio: 'Leads Vanspire as CEO, setting direction and building the delivery systems and operational frameworks that support the firm\'s growth.',
+    bio: 'Founding Director and CEO. Leads Vanspire, setting direction and building the delivery systems and operational frameworks that support the firm\'s growth.',
     image: '/akshay.png',
   },
   {
@@ -59,6 +59,6 @@ export const getPerson = (id: string) => TEAM.find((p) => p.id === id)
 export const CEO = TEAM[0]
 export const COO = TEAM[1]
 
-/** "Akshay Krishna (CEO), Adithyan Dileep (Founding Director & COO), Vyshnav M and Sreehari S" */
+/** "Akshay Krishna (Founding Director & CEO), Adithyan Dileep (Founding Director & COO), Vyshnav M and Sreehari S" */
 export const FOUNDERS_SENTENCE =
-  'Akshay Krishna (CEO), Adithyan Dileep (Founding Director and COO), Vyshnav M (Growth & Markets) and Sreehari S (Systems & Infrastructure)'
+  'Akshay Krishna (Founding Director and CEO), Adithyan Dileep (Founding Director and COO), Vyshnav M (Growth & Markets) and Sreehari S (Systems & Infrastructure)'

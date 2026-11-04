@@ -19,13 +19,13 @@ import { IDS } from '@/lib/site'
 
 const TITLE = 'About Vanspire: Founder-Led Product & IT Firm'
 const DESCRIPTION =
-  'Meet the founders of Vanspire: Akshay Krishna (CEO), Adithyan Dileep (Founding Director & COO), Vyshnav M and Sreehari S. A product and IT firm in Kerala, India.'
+  'Meet the founders of Vanspire, a Kerala product and IT firm: Akshay Krishna (Founding Director & CEO), Adithyan Dileep (Founding Director & COO), Vyshnav M, Sreehari S.'
 
 export const metadata: Metadata = buildMetadata({
   title: TITLE,
   description: DESCRIPTION,
   path: '/about',
-  keywords: ['about Vanspire', 'Vanspire founders', 'Akshay Krishna CEO', 'Adithyan Dileep founding director COO', 'software company Kerala'],
+  keywords: ['about Vanspire', 'Vanspire founders', 'Akshay Krishna CEO', 'Akshay Krishna founding director', 'Adithyan Dileep founding director COO', 'software company Kerala'],
 })
 
 const pillars = [
@@ -155,8 +155,8 @@ export default function AboutPage() {
               <h2 className="text-display-md">The people behind Vanspire.</h2>
             </div>
             <p className="max-w-sm text-ink/60">
-              Four co-founders, four disciplines. Akshay Krishna leads as CEO and Adithyan Dileep is Founding Director
-              and COO. You will work directly with us, not an account manager.
+              Four co-founders, four disciplines. Akshay Krishna is Founding Director and CEO, and Adithyan Dileep is
+              Founding Director and COO. You will work directly with us, not an account manager.
             </p>
           </MotionWrapper>
 

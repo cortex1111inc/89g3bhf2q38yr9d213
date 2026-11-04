@@ -10,7 +10,7 @@ export const GENERAL_FAQS = [
   {
     question: 'Who founded Vanspire and who leads it?',
     answer:
-      `Vanspire was founded in 2024 by four co-founders: ${FOUNDERS_SENTENCE}. Akshay Krishna is the Chief Executive Officer, and Adithyan Dileep is the Founding Director and Chief Operating Officer.`,
+      `Vanspire was founded in 2024 by four co-founders: ${FOUNDERS_SENTENCE}. Akshay Krishna is the Founding Director and Chief Executive Officer, and Adithyan Dileep is the Founding Director and Chief Operating Officer.`,
   },
   {
     question: 'Where is Vanspire based?',
